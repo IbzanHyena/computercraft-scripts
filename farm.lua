@@ -53,10 +53,29 @@ local function harvest()
     end
 end
 
+local function dumpCrops()
+    for n = 2,16 do
+        turtle.select(n)
+        turtle.drop()
+    end
+end
+
+local function getFuel()
+    turtle.select(1)
+    local capacity = 64 - turtle.getItemCount()
+    turtle.suck(capacity)
+end
+
 local originTime = os.clock()
 while true do
     extraTurtle.refuelToMin(Length * Width)
     extraTurtle.walkGrid(Length, Width, harvest)
+    turtle.turnLeft()
+    dumpCrops()
+    turtle.turnLeft()
+    getFuel()
+    turtle.turnRight()
+    turtle.turnRight()
     local currentTime = os.clock()
     local sleepTime = math.max(0, IterationTime - (currentTime - originTime))
     sleep(sleepTime)
