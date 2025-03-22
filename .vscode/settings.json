@@ -1,0 +1,32 @@
+{
+    "Lua.diagnostics.globals": [
+        "bit",
+        "colors",
+        "colours",
+        "commands",
+        "coroutine",
+        "disk",
+        "fs",
+        "gps",
+        "help",
+        "http",
+        "io",
+        "keys",
+        "math",
+        "multishell",
+        "os",
+        "paintutils",
+        "parallel",
+        "peripheral",
+        "rednet",
+        "redstone",
+        "settings",
+        "shell",
+        "sleep",
+        "term",
+        "textutils",
+        "turtle",
+        "vector",
+        "window"
+    ]
+}
