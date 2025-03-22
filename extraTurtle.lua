@@ -1,5 +1,4 @@
-function createHamiltonian(length, width)
-    -- construct a Hamiltonian cycle of the graph
+local function createHamiltonianL(length, width)
     if length % 2 == 1 then
         return nil
     end
@@ -25,6 +24,47 @@ function createHamiltonian(length, width)
     end
 
     return turns
+end
+
+local function createHamiltonianW(length, width)
+    if width % 2 == 1 then
+        return nil
+    end
+
+    turns = {}
+    for row = 1,length do
+        turns[row] = {}
+    end
+    for col = 1,width do
+        local bottomCoordinate
+        if col == 1 or col == width then
+            bottomCoordinate = 1
+        else
+            bottomCoordinate = 2
+        end
+        local bottomSideTurn
+        if col == 1 or col == width then
+            bottomSideTurn = "R"
+        else
+            bottomSideTurn = "L"
+        end
+
+        turns[bottomSideCoordinate][col] = bottomSideTurn
+        turns[length][col] = "R"
+    end
+
+    return turns
+end
+
+function createHamiltonian(length, width)
+    -- construct a Hamiltonian cycle of a grid graph
+    if length % 2 == 0 then
+        return createHamiltonianL(length, width)
+    elseif width % 2 == 0 then
+        return createHamiltonianW(length, width)
+    else
+        return nil
+    end
 end
 
 function find(item)
