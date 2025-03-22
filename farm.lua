@@ -1,5 +1,9 @@
 local argv = { ... }
 
+if not os.loadAPI("/apis/extraTurtle") then
+    print("Failed to load extraTurtle API")
+end
+
 if #argv ~= 2 then
     print("Usage: farm <length> <width>")
     return
@@ -17,6 +21,12 @@ if Width == nil or Width < 2 then
     return
 end
 
+Turns = extraTurtle.createHamiltonian(Length, Width)
+if Turns == nil then
+    print("Failed to create Hamiltonian cycle")
+    return
+end
+
 IterationTime = 300 -- seconds
 
 FinishedStates = {}
@@ -26,50 +36,6 @@ FinishedStates["minecraft:carrots"] = 7
 BlockToItemNames = {}
 BlockToItemNames["minecraft:potatoes"] = "minecraft:potato"
 BlockToItemNames["minecraft:carrots"] = "minecraft:carrot"
-
--- construct a Hamiltonian cycle of the graph
-if Length % 2 == 1 then
-    print("Length must be even.")
-    return
-end
-
-Turns = {}
-for row = 1,Length do
-    Turns[row] = {}
-    local leftCoordinate
-    if row == 1 or row == Length then
-        leftCoordinate = 1
-    else
-        leftCoordinate = 2
-    end
-    local leftSideTurn
-    if row == 1 or row == Length then
-      leftSideTurn = "R"
-    else
-        leftSideTurn = "L"
-    end
-
-    Turns[row][leftCoordinate] = leftSideTurn
-    Turns[row][Width] = "R"
-end
-
-local function refuelToMin(amount)
-    local fuelLevel = turtle.getFuelLevel()
-    if fuelLevel == "unlimited" or amount <= fuelLevel then
-        return
-    end
-
-    local needed = amount - fuelLevel
-    while needed > 0 do
-        for n = 1,16 do
-            if turtle.getItemCount(n) > 0 then
-                turtle.select(n)
-                turtle.refuel(1)
-                needed = amount - turtle.getFuelLevel()
-            end
-        end
-    end
-end
 
 local function check()
     local success, data = turtle.inspectDown()
@@ -82,20 +48,11 @@ local function check()
     return false, nil
 end
 
-local function find(item)
-    for n = 1,16 do
-        local detail = turtle.getItemDetail(n)
-        if detail ~= nil and detail.name == item then
-            return n
-        end
-    end
-end
-
 local function harvest()
     local success, crop = check()
     if not success then return end
     turtle.digDown()
-    local slot = find(BlockToItemNames[crop])
+    local slot = extraTurtle.find(BlockToItemNames[crop])
     if slot ~= nil then
        turtle.select(slot)
        turtle.placeDown()
@@ -113,7 +70,7 @@ local function checkGrid()
     refuelToMin(Length * Width)
     while true do
         harvest()
-        turtle.forward()
+        extraTurtle.tolerantMove("forward")
         x = x + dx[currentDirection]
         y = y + dy[currentDirection]
         local turn = Turns[x][y]

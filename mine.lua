@@ -7,6 +7,11 @@ five blocks to ensure coverage).
 ]]
 
 local argv = { ... }
+
+if not os.loadAPI("/apis/extraTurtle") then
+    print("Failed to load extraTurtle API")
+end
+
 if #argv ~= 1 and #argv ~= 3 then
     print("Usage: mine <n segments> [<n slices> <initial direction>]")
     return
@@ -36,39 +41,6 @@ else
 end
 
 SegmentLength = 8
-
-local function refuelToMin(amount)
-    local fuelLevel = turtle.getFuelLevel()
-    if fuelLevel == "unlimited" or amount <= fuelLevel then
-        return
-    end
-
-    local needed = amount - fuelLevel
-    while needed > 0 do
-        for n = 1,16 do
-            if turtle.getItemCount(n) > 0 then
-                turtle.select(n)
-                turtle.refuel(1)
-                needed = amount - turtle.getFuelLevel()
-            end
-        end
-    end
-end
-
-local function tolerantMove(direction, n)
-    local functions = {
-        down=turtle.down,
-        up=turtle.up,
-        forward=turtle.forward,
-        back=turtle.back,
-    }
-    local f = functions[direction]
-    if f == nil then return end
-    if n == nil then n = 1 end
-    for k = 1,n do
-        while not f() do sleep(1) end
-    end
-end
 
 local function gravityDig()
     local success, data = turtle.inspect()
@@ -113,7 +85,7 @@ local function placeTorch()
     if this fails, move down to place a cobblestone block to place the torch on
     ]]
     if not turtle.placeDown() then
-        tolerantMove("down")
+        extraTurtle.tolerantMove("down")
         for n = 1,16 do
             turtle.select(n)
             local data = turtle.getItemDetail()
@@ -122,7 +94,7 @@ local function placeTorch()
                 break
             end
         end
-        tolerantMove("up")
+        extraTurtle.tolerantMove("up")
         turtle.select(torchSlot)
         -- if this doesn't work for some reason, oh well
         turtle.placeDown()
@@ -133,25 +105,25 @@ local function mine(n)
     if n == nil then n = 1 end
     for k = 1,n do
         gravityDig()
-        tolerantMove("forward")
+        extraTurtle.tolerantMove("forward")
         safeDigDown()
     end
 end
 
 local function mineSegment()
     -- calculate needed fuel for this leg and refuel
-    refuelToMin(SegmentLength)
+    extraTurtle.refuelToMin(SegmentLength)
     -- start by mining SegmentLength 1x2 tunnel
     mine(SegmentLength)
     -- now place a torch and then dig the connecting points either side
-    refuelToMin(2)
+    extraTurtle.refuelToMin(2)
     placeTorch()
     turtle.turnLeft()
     local success, data = turtle.inspect()
     if success then
-        refuelToMin(4)
+        extraTurtle.refuelToMin(4)
         mine(2)
-        tolerantMove("back", 2)
+        extraTurtle.tolerantMove("back", 2)
     end
 
     turtle.turnRight()
@@ -159,9 +131,9 @@ local function mineSegment()
 
     local success, _ = turtle.inspect()
     if success then
-        refuelToMin(4)
+        extraTurtle.refuelToMin(4)
         mine(2)
-        tolerantMove("back", 2)
+        extraTurtle.tolerantMove("back", 2)
     end
 
     turtle.turnLeft()
@@ -183,7 +155,7 @@ local function nextSegment(direction)
     if turn == nil then return end
     turn()
     mine(5)
-    tolerantMove("back", 2)
+    extraTurtle.tolerantMove("back", 2)
     turn()
     placeTorch()
 end
@@ -212,7 +184,7 @@ local function ensureRightHeight()
     local successUp, _ = turtle.inspectUp()
     if successUp and not successDown then return true end
     if successDown and not successUp then
-        refuelToMin(1)
+        extraTurtle.refuelToMin(1)
         turtle.up()
         return true
     end
