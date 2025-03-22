@@ -15,7 +15,7 @@ function createHamiltonian(length, width)
         end
         local leftSideTurn
         if row == 1 or row == length then
-        leftSideTurn = "R"
+            leftSideTurn = "R"
         else
             leftSideTurn = "L"
         end
