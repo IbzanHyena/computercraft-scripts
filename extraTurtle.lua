@@ -110,3 +110,29 @@ function tolerantMove(direction, n)
         while not f() do sleep(1) end
     end
 end
+
+function walkGrid(length, width, callback)
+    local turns = createHamiltonian(length, width)
+    local x, y = 1, 1
+    local currentDirection = "N"
+    local dx = {N=1, E=0, S=-1, W=0}
+    local dy = {N=0, E=1, S=0, W=-1}
+    local leftTurns = {N="W", E="N", S="E", W="S"}
+    local rightTurns = {N="E", E="S", S="W", W="N"}
+    refuelToMin(length * width)
+    while true do
+        callback()
+        tolerantMove("forward")
+        x = x + dx[currentDirection]
+        y = y + dy[currentDirection]
+        local turn = turns[x][y]
+        if turn == "L" then
+            turtle.turnLeft()
+            currentDirection = leftTurns[currentDirection]
+        elseif turn == "R" then
+            turtle.turnRight()
+            currentDirection = rightTurns[currentDirection]
+        end
+        if x == 1 and y == 1 then return end
+    end
+end
