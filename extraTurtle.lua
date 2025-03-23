@@ -1,3 +1,21 @@
+local function createHamiltonian2(length, width)
+    if length ~= 2 or width ~= 2 then
+        return nil
+    end
+
+    turns = {}
+    for row = 1,length do
+        turns[row] = {}
+    end
+
+    turns[1][1] = "R"
+    turns[length][1] = "R"
+    turns[length][width] = "R"
+    turns[1][width] = "R"
+
+    return turns
+end
+
 local function createHamiltonianL(length, width)
     if length % 2 == 1 then
         return nil
@@ -58,7 +76,9 @@ end
 
 function createHamiltonian(length, width)
     -- construct a Hamiltonian cycle of a grid graph
-    if length % 2 == 0 then
+    if length == 2 or width == 2 then
+        return createHamiltonian2(length, width)
+    elseif length % 2 == 0 then
         return createHamiltonianL(length, width)
     elseif width % 2 == 0 then
         return createHamiltonianW(length, width)
@@ -113,6 +133,8 @@ end
 
 function walkGrid(length, width, callback)
     local turns = createHamiltonian(length, width)
+    if turns == nil then return end
+
     local x, y = 1, 1
     local currentDirection = "N"
     local dx = {N=1, E=0, S=-1, W=0}
