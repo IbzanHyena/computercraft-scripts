@@ -5,7 +5,7 @@ if not os.loadAPI("/apis/extraTurtle") then
 end
 
 if #argv ~= 3 then
-    print("Usage: farm <length> <width> <depth>")
+    print("Usage: lwdexcavate <length> <width> <depth>")
     return
 end
 
