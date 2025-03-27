@@ -84,7 +84,13 @@ local function placeTorch()
     try and place a torch below the turtle
     if this fails, move down to place a cobblestone block to place the torch on
     ]]
-    if not turtle.placeDown() then
+    turtle.placeDown()
+    local success, data = turtle.inspectDown()
+    if not success or data.metadata ~= 5 then
+        if success then
+            turtle.digDown()
+        end
+
         extraTurtle.tolerantMove("down")
         -- break block in front if present
         turtle.dig()
