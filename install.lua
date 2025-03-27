@@ -28,6 +28,6 @@ local function install(target, slug)
     shell.run("/pastebin", "get", slug, target)
 end
 
-for target, slug in pairs(installTargets) do
-    install(installRoot .. target, slug)
+for t, s in pairs(installTargets) do
+    install(installRoot .. t, s)
 end
