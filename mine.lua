@@ -86,6 +86,8 @@ local function placeTorch()
     ]]
     if not turtle.placeDown() then
         extraTurtle.tolerantMove("down")
+        -- break block in front if present
+        turtle.dig()
         for n = 1,16 do
             turtle.select(n)
             local data = turtle.getItemDetail()
@@ -115,9 +117,7 @@ local function mineSegment()
     extraTurtle.refuelToMin(SegmentLength)
     -- start by mining SegmentLength 1x2 tunnel
     mine(SegmentLength)
-    -- now place a torch and then dig the connecting points either side
-    extraTurtle.refuelToMin(2)
-    placeTorch()
+    -- now dig the connecting points either side and then place a torch
     turtle.turnLeft()
     local success, data = turtle.inspect()
     if success then
@@ -137,6 +137,8 @@ local function mineSegment()
     end
 
     turtle.turnLeft()
+    extraTurtle.refuelToMin(2)
+    placeTorch()
 end
 
 local function mineSegments()
