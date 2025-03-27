@@ -69,6 +69,7 @@ else
     for i = 1,Depth do
         extraTurtle.refuelToMin(Length * Width)
         path:walk(turtle.digDown, inReverse)
+        turtle.digDown()
         extraTurtle.refuelToMin(1)
         extraTurtle.tolerantMove("down")
         turtle.turnRight()
