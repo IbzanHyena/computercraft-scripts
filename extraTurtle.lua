@@ -75,7 +75,7 @@ function Turns:createGHC2(length, width)
 end
 
 
-function Turns:createHamiltonianL(length, width)
+function Turns:createGHCL(length, width)
     if length % 2 == 1 then
         return false
     end
@@ -102,7 +102,7 @@ function Turns:createHamiltonianL(length, width)
 end
 
 
-function Turns:createHamiltonianW(length, width)
+function Turns:createGHCW(length, width)
     if width % 2 == 1 then
         return false
     end
@@ -129,14 +129,14 @@ function Turns:createHamiltonianW(length, width)
 end
 
 
-function Turns:createHamiltonian(length, width)
+function Turns:createGHC(length, width)
     -- construct a Hamiltonian cycle of a grid graph
     if length == 2 or width == 2 then
-        return self:createHamiltonian2(length, width)
+        return self:createGHC2(length, width)
     elseif length % 2 == 0 then
-        return self:createHamiltonianL(length, width)
+        return self:createGHCL(length, width)
     elseif width % 2 == 0 then
-        return self:createHamiltonianW(length, width)
+        return self:createGHCW(length, width)
     else
         return nil
     end
@@ -224,7 +224,7 @@ function GridHamiltonianCycle:new(l, w, o)
     self.length = l
     self.width = w
     self.turns = Turns:new()
-    if not self.turns:createHamiltonian(self.length, self.width) then
+    if not self.turns:createGHC(self.length, self.width) then
         return nil
     end
 
