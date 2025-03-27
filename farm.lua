@@ -67,9 +67,10 @@ local function getFuel()
 end
 
 local originTime = os.clock()
+local path = extraTurtle.GridHamiltonianCycle:new(Length, Width)
 while true do
     extraTurtle.refuelToMin(Length * Width)
-    extraTurtle.walkGrid(Length, Width, harvest)
+    path:walk(harvest)
     turtle.turnLeft()
     dumpCrops()
     turtle.turnLeft()
