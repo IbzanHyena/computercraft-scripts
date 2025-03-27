@@ -65,7 +65,7 @@ end
 
 
 function Turns:createGHC2(length, width)
-    if length ~= 2 or width ~= 2 then
+    if length ~= 2 and width ~= 2 then
         return false
     end
 
