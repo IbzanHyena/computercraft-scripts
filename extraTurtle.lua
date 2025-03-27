@@ -46,6 +46,9 @@ function Turns:__index(key)
     if Turns[key] then
         return Turns[key]
     end
+    if type(key) ~= "number" then
+        return nil
+    end
     self[key] = {}
     return self[key]
 end
