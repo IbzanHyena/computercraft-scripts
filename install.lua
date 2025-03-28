@@ -2,7 +2,7 @@ local argv = { ... }
 
 local installRoot = argv[1] or "/"
 
-if installRoot:sub(installRoot:len()) ~= "/" then
+if installRoot:sub(-1) ~= "/" then
     installRoot = installRoot .. "/"
 end
 
