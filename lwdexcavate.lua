@@ -36,10 +36,11 @@ elseif Length == 1 then
     turtle.turnRight()
     for i = 1,Depth do
         extraTurtle.refuelToMin(Width)
-        for i = 1,Width do
+        for i = 1,Width-1 do
             turtle.digDown()
             extraTurtle.tolerantMove("forward")
         end
+        turtle.digDown()
         turtle.turnRight()
         turtle.turnRight()
         extraTurtle.tolerantMove("down")
@@ -47,10 +48,11 @@ elseif Length == 1 then
 elseif Width == 1 then
     for i = 1,Depth do
         extraTurtle.refuelToMin(Length)
-        for i = 1,Length do
+        for i = 1,Length-1 do
             turtle.digDown()
             extraTurtle.tolerantMove("forward")
         end
+        turtle.digDown()
         turtle.turnRight()
         turtle.turnRight()
         extraTurtle.tolerantMove("down")
