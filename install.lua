@@ -1,33 +1,41 @@
 local argv = { ... }
 
+local urlRoot = "https://raw.githubusercontent.com/IbzanHyena/computercraft-scripts/refs/heads/main/"
 local installRoot = argv[1] or "/"
 
 if installRoot:sub(-1) ~= "/" then
     installRoot = installRoot .. "/"
 end
 
-local installTargets = {}
-installTargets["apis/extraTurtle"] = "0Tg4reBi"
-installTargets["farm"] = "YF70yHCV"
-installTargets["lwdexcavate"] = "5tUKnEbA"
-installTargets["mine"] = "rtq1TzEj"
+local installTargets = {
+    "apis/extraTurtle",
+    "farm",
+    "lwdexcavate",
+    "mine",
+}
 
-local function install(target, slug)
+local function install(target)
+    local targetPath = installRoot .. target
+
     -- make parent if necessary
-    local parent = fs.getDir(target)
+    local parent = fs.getDir(targetPath)
     if not fs.exists(parent) then
         fs.makeDir(parent)
     end
 
     -- now test for existence of the current file and replace if needed
-    if fs.exists(target) then
-        fs.delete(target)
+    if fs.exists(targetPath) then
+        fs.delete(targetPath)
     end
 
     -- finally, acquire the file
-    shell.run("/pastebin", "get", slug, target)
+    local response = http.get(urlRoot .. target .. ".lua")
+    if not response then return end
+    local file = fs.open(targetPath, "w")
+    file.write(response.readAll())
+    file.close()
 end
 
-for t, s in pairs(installTargets) do
-    install(installRoot .. t, s)
+for t in installTargets do
+    install(t)
 end
