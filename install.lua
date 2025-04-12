@@ -14,11 +14,9 @@ if not response then
 end
 
 local installTargets = {}
-string.gsub(
-    response.readAll(),
-    "(%a+)",
-    function(w) table.insert(installTargets, w) end
-)
+for w in response.readAll():gmatch("[^\r\n]+") do
+    table.insert(installTargets, w)
+end
 print("Installing " .. #installTargets .. " files")
 
 local function install(target)
