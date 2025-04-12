@@ -1,6 +1,6 @@
 local argv = { ... }
 
-local RowCheckInterval = 120  -- seconds
+local RowCheckInterval = 60  -- seconds
 
 if not os.loadAPI("/apis/extraTurtle") then
     print("Failed to load extraTurtle API")
