@@ -59,16 +59,15 @@ end
 
 while true do
     local success, data = turtle.inspect()
-    if not success or isNotWood(data) then
+    if success and isWood(data) then
+        print("Chopping tree")
+        chopTree()
+        print("Returning wood")
+        returnWood()
+        print("Grabbing coal")
+        grabCoal()
+    else
         print("No wood yet")
         sleep(5)
-        goto continue
     end
-    print("Chopping tree")
-    chopTree()
-    print("Returning wood")
-    returnWood()
-    print("Grabbing coal")
-    grabCoal()
-    ::continue::
 end
