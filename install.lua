@@ -12,6 +12,7 @@ local installTargets = {
     "farm",
     "lwdexcavate",
     "mine",
+    "wget",
 }
 
 local function install(target)
