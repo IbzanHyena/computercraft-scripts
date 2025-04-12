@@ -147,7 +147,6 @@ end
 
 local function harvestRow()
     while true do
-        printReport()
         extraTurtle.refuelToMin(Length, isNotWood)
         for _ = 1,Length do
             -- necessary in case we chopped down a tree last iteration
@@ -180,6 +179,7 @@ local function harvestRow()
         turtle.turnRight()
         local wh = service()
         WoodHarvested = WoodHarvested + wh
+        printReport()
         sleep(300)
     end
 end
