@@ -7,14 +7,18 @@ if installRoot:sub(-1) ~= "/" then
     installRoot = installRoot .. "/"
 end
 
-local installTargets = {
-    "install",
-    "apis/extraTurtle",
-    "farm",
-    "lwdexcavate",
-    "mine",
-    "wget",
-}
+local response = http.get(urlRoot .. "installTargets.txt")
+if not response then
+    print("unable to retrieve install targets")
+    return
+end
+
+local installTargets = {}
+string.gsub(
+    response.readAll(),
+    "(%a)",
+    function(w) table.insert(installTargets, w) end,
+)
 
 local function install(target)
     local targetPath = installRoot .. target
