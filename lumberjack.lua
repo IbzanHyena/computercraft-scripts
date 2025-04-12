@@ -143,6 +143,10 @@ end
 
 local function harvestRow()
     while true do
+        -- service at the start to pick up and saplings that have been collected
+        -- since the last iteration
+        local wh = service()
+        WoodHarvested = WoodHarvested + wh
         extraTurtle.refuelToMin(Length, isNotWood)
         for _ = 1,Length do
             -- necessary in case we chopped down a tree last iteration
