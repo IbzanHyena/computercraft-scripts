@@ -19,8 +19,11 @@ string.gsub(
     "(%a+)",
     function(w) table.insert(installTargets, w) end
 )
+print("Installing " .. #installTargets .. " files")
 
 local function install(target)
+    io.write("Installing " .. target .. "...")
+    io.flush()
     local targetPath = installRoot .. target
 
     -- make parent if necessary
@@ -36,10 +39,14 @@ local function install(target)
 
     -- finally, acquire the file
     local response = http.get(urlRoot .. target .. ".lua")
-    if not response then return end
+    if not response then
+        print(" no response")
+        return
+    end
     local file = fs.open(targetPath, "w")
     file.write(response.readAll())
     file.close()
+    print(" success")
 end
 
 for _, t in ipairs(installTargets) do
