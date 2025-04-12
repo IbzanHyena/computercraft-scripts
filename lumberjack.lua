@@ -34,19 +34,29 @@ local function chopTree()
     extraTurtle.tolerantMove("back")
 end
 
+local function grabSapling()
+    while true do
+        for i = 1,16 do
+            local data = turtle.getItemDetail(i)
+            if data ~= nil and string.find(data.name, "sapling") then
+                return
+            end
+        end
+        if turtle.suck(1) then return end
+        sleep(5)
+    end
+end
+
 local function returnWood()
-    turtle.turnLeft()
     for i = 1,16 do
         if isWood(turtle.getItemDetail(i)) then
             turtle.select(i)
             turtle.drop()
         end
     end
-    turtle.turnRight()
 end
 
 local function grabCoal()
-    turtle.turnRight()
     for i = 1,16 do
         local data = turtle.getItemDetail(i)
         if data ~= nil and data.name == "minecraft:coal" then
@@ -55,7 +65,16 @@ local function grabCoal()
             break
         end
     end
-    turtle.turnLeft()
+end
+
+local function plantSapling()
+    for i = 1,16 do
+        local data = turtle.getItemDetail(i)
+        if data ~= nil and string.find(data.name, "sapling") then
+            turtle.place()
+            return
+        end
+    end
 end
 
 while true do
@@ -64,9 +83,17 @@ while true do
         print("Chopping tree")
         chopTree()
         print("Returning wood")
+        turtle.turnLeft()
         returnWood()
+        print("Grabbing sapling")
+        turtle.turnLeft()
+        grabSapling()
         print("Grabbing coal")
+        turtle.turnLeft()
         grabCoal()
+        print("Planting sapling")
+        turtle.turnLeft()
+        plantSapling()
     else
         print("No wood yet")
         sleep(5)
