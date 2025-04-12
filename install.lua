@@ -17,7 +17,7 @@ local installTargets = {}
 string.gsub(
     response.readAll(),
     "(%a)",
-    function(w) table.insert(installTargets, w) end,
+    function(w) table.insert(installTargets, w) end
 )
 
 local function install(target)
