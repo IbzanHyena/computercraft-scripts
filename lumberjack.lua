@@ -3,7 +3,7 @@ if not os.loadAPI("/apis/extraTurtle") then
 end
 
 local function isWood(data)
-    return data ~= nil and string.find(data.name, "wood") ~= nil
+    return data ~= nil and string.find(data.name, "log") ~= nil
 end
 
 local function isNotWood(data)
