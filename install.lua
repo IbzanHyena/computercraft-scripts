@@ -36,6 +36,6 @@ local function install(target)
     file.close()
 end
 
-for t in installTargets do
+for _, t in ipairs(installTargets) do
     install(t)
 end
