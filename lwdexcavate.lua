@@ -26,15 +26,17 @@ if Depth == nil or Depth < 1 then
     print("Depth must be positive")
 end
 
+local state = {}
+local digLayer
+
 if Length == 1 and Depth == 1 then
     extraTurtle.refuelToMin(Depth)
-    for i = 1,Depth do
+    digLayer = function()
         turtle.digDown()
-        extraTurtle.tolerantMove("down")
     end
 elseif Length == 1 then
     turtle.turnRight()
-    for i = 1,Depth do
+    digLayer = function ()
         extraTurtle.refuelToMin(Width)
         for i = 1,Width-1 do
             turtle.digDown()
@@ -43,10 +45,9 @@ elseif Length == 1 then
         turtle.digDown()
         turtle.turnRight()
         turtle.turnRight()
-        extraTurtle.tolerantMove("down")
     end
 elseif Width == 1 then
-    for i = 1,Depth do
+    digLayer = function ()
         extraTurtle.refuelToMin(Length)
         for i = 1,Length-1 do
             turtle.digDown()
@@ -55,27 +56,35 @@ elseif Width == 1 then
         turtle.digDown()
         turtle.turnRight()
         turtle.turnRight()
-        extraTurtle.tolerantMove("down")
     end
 elseif (Length % 2 == 0) or (Width % 2 == 0) then
     local path = extraTurtle.GridHamiltonianCycle:new(Length, Width)
-    for i = 1,Depth do
+    digLayer = function ()
         extraTurtle.refuelToMin(Length * Width)
         path:walk(turtle.digDown)
-        extraTurtle.refuelToMin(1)
-        extraTurtle.tolerantMove("down")
     end
 else
     local path = extraTurtle.GridPath:new(Length, Width)
-    local inReverse = false
-    for i = 1,Depth do
+    digLayer = function (s)
         extraTurtle.refuelToMin(Length * Width)
-        path:walk(turtle.digDown, inReverse)
+        path:walk(turtle.digDown, s.inReverse)
         turtle.digDown()
         extraTurtle.refuelToMin(1)
         extraTurtle.tolerantMove("down")
         turtle.turnRight()
         turtle.turnRight()
-        inReverse = not inReverse
+        s.inReverse = not s.inReverse
     end
+    state.inReverse = false
+end
+
+local startTime = os.clock()
+for i = 1,Depth do
+    digLayer(state)
+    extraTurtle.refuelToMin(1)
+    extraTurtle.tolerantMove("down")
+    local now = os.clock()
+    print("Completed layer " .. i .. "/" .. Depth)
+    print("Elapsed time: " .. (now - startTime) .. " s (" .. ((now - startTime) / i) .. " s/layer)")
+    print("Estimated remaining time: " .. ((now - startTime) / i) * (Depth - i) .. " s")
 end
