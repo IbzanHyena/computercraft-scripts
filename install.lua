@@ -8,6 +8,7 @@ if installRoot:sub(-1) ~= "/" then
 end
 
 local installTargets = {
+    "install",
     "apis/extraTurtle",
     "farm",
     "lwdexcavate",
