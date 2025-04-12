@@ -28,9 +28,7 @@ local function chopTree()
     end
 
     extraTurtle.refuelToMin(height + 1, isNotWood)
-    for _ = 1,height do
-        extraTurtle.tolerantMove("down")
-    end
+    extraTurtle.tolerantMove("down", height)
     extraTurtle.tolerantMove("back")
 end
 
