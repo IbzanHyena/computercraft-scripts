@@ -1,4 +1,4 @@
-function refuelToMin(amount)
+function refuelToMin(amount, predicate)
     local fuelLevel = turtle.getFuelLevel()
     if fuelLevel == "unlimited" or amount <= fuelLevel then
         return
@@ -7,7 +7,10 @@ function refuelToMin(amount)
     local needed = amount - fuelLevel
     while needed > 0 do
         for n = 1,16 do
-            if turtle.getItemCount(n) > 0 then
+            if
+                turtle.getItemCount(n) > 0
+                and (predicate == nil or predicate(turtle.getItemDetail(n)))
+            then
                 turtle.select(n)
                 turtle.refuel(1)
                 needed = amount - turtle.getFuelLevel()

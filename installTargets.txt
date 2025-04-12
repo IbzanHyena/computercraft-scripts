@@ -4,3 +4,4 @@ farm
 lwdexcavate
 mine
 wget
+lumberjack
