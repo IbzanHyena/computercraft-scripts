@@ -46,12 +46,16 @@ local function grabSapling()
 end
 
 local function returnWood()
+    local woodReturned = 0
     for i = 1,16 do
-        if isWood(turtle.getItemDetail(i)) then
+        local data = turtle.getItemDetail(i)
+        if isWood(data) then
             turtle.select(i)
+            woodReturned = woodReturned + data.count
             turtle.drop()
         end
     end
+    return woodReturned
 end
 
 local function grabCoal()
@@ -76,14 +80,29 @@ local function plantSapling()
     end
 end
 
+local StartTime = os.clock()
+local LastReportTime = StartTime
+local ReportInterval = 300
+local TreesChopped = 0
+local WoodHarvested = 0
 while true do
+    local now = os.clock()
+    if now - LastReportTime >= ReportInterval then
+        print("----------")
+        print("Now harvested " .. WoodHarvested .. " wood (" .. TreesChopped .. " trees)")
+        print("Time taken: " .. now - StartTime .. " s")
+        print("Rate: " .. WoodHarvested / StartTime .. " wood/s")
+        print("----------")
+        LastReportTime = now
+    end
     local success, data = turtle.inspect()
     if success and isWood(data) then
         print("Chopping tree")
         chopTree()
+        TreesChopped = TreesChopped + 1
         print("Returning wood")
         turtle.turnLeft()
-        returnWood()
+        WoodHarvested = WoodHarvested + returnWood()
         print("Grabbing sapling")
         turtle.turnLeft()
         grabSapling()
@@ -94,7 +113,6 @@ while true do
         turtle.turnLeft()
         plantSapling()
     else
-        print("No wood yet")
         sleep(5)
     end
 end
