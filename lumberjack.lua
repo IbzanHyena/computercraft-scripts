@@ -118,7 +118,10 @@ end
 
 local function tryChopTree()
     local success, data = turtle.inspect()
-    if not success or isNotWood(data) then
+    if not success then
+        plantSapling()
+        return false
+    elseif isNotWood(data) then
         return false
     end
     chopTree()
