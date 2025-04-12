@@ -96,13 +96,10 @@ local TreesChopped = 0
 local WoodHarvested = 0
 
 local function service()
-    print("Returning wood")
     turtle.turnLeft()
     local wh = returnWood()
-    print("Grabbing sapling")
     turtle.turnLeft()
     grabSaplings()
-    print("Grabbing coal")
     turtle.turnLeft()
     grabCoal()
     turtle.turnLeft()
@@ -111,7 +108,6 @@ end
 
 local function printReport(now)
     if now == nil then now = os.clock() end
-    print("----------")
     print("Now harvested " .. WoodHarvested .. " wood (" .. TreesChopped .. " trees)")
     print("Time taken: " .. now - StartTime .. " s")
     print("Rate: " .. WoodHarvested / (now - StartTime) .. " wood/s")
@@ -123,7 +119,6 @@ local function tryChopTree()
     if not success or isNotWood(data) then
         return false
     end
-    print("Chopping tree")
     chopTree()
     return true
 end
@@ -139,7 +134,6 @@ local function harvestOne()
             TreesChopped = TreesChopped + 1
             local wh = service()
             WoodHarvested = WoodHarvested + wh
-            print("Planting sapling")
             plantSapling()
         else
             sleep(5)
