@@ -91,7 +91,7 @@ while true do
         print("----------")
         print("Now harvested " .. WoodHarvested .. " wood (" .. TreesChopped .. " trees)")
         print("Time taken: " .. now - StartTime .. " s")
-        print("Rate: " .. WoodHarvested / StartTime .. " wood/s")
+        print("Rate: " .. WoodHarvested / (now - StartTime) .. " wood/s")
         print("----------")
         LastReportTime = now
     end
