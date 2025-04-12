@@ -1,6 +1,15 @@
+local argv = { ... }
+
 if not os.loadAPI("/apis/extraTurtle") then
     print("Failed to load extraTurtle API")
 end
+
+if #argv > 1 then
+    print("Usage: lumberjack [length]")
+    return
+end
+
+local Length = tonumber(argv[1])
 
 local function isWood(data)
     return data ~= nil and string.find(data.name, "log") ~= nil
@@ -32,16 +41,14 @@ local function chopTree()
     extraTurtle.tolerantMove("back")
 end
 
-local function grabSapling()
-    while true do
-        for i = 1,16 do
-            local data = turtle.getItemDetail(i)
-            if data ~= nil and string.find(data.name, "sapling") then
-                return
-            end
+local function grabSaplings()
+    for i = 1,16 do
+        local data = turtle.getItemDetail(i)
+        if data ~= nil and string.find(data.name, "sapling") then
+            turtle.select(i)
+            turtle.suck(64 - data.count)
+            break
         end
-        if turtle.suck(1) then return end
-        sleep(5)
     end
 end
 
@@ -85,34 +92,100 @@ local LastReportTime = StartTime
 local ReportInterval = 300
 local TreesChopped = 0
 local WoodHarvested = 0
-while true do
-    local now = os.clock()
-    if now - LastReportTime >= ReportInterval then
-        print("----------")
-        print("Now harvested " .. WoodHarvested .. " wood (" .. TreesChopped .. " trees)")
-        print("Time taken: " .. now - StartTime .. " s")
-        print("Rate: " .. WoodHarvested / (now - StartTime) .. " wood/s")
-        print("----------")
-        LastReportTime = now
-    end
+
+local function service()
+    print("Returning wood")
+    turtle.turnLeft()
+    local wh = returnWood()
+    print("Grabbing sapling")
+    turtle.turnLeft()
+    grabSaplings()
+    print("Grabbing coal")
+    turtle.turnLeft()
+    grabCoal()
+    turtle.turnLeft()
+    return wh
+end
+
+local function printReport(now)
+    if now == nil then now = os.clock() end
+    print("----------")
+    print("Now harvested " .. WoodHarvested .. " wood (" .. TreesChopped .. " trees)")
+    print("Time taken: " .. now - StartTime .. " s")
+    print("Rate: " .. WoodHarvested / (now - StartTime) .. " wood/s")
+    print("----------")
+end
+
+local function tryChopTree()
     local success, data = turtle.inspect()
-    if success and isWood(data) then
-        print("Chopping tree")
-        chopTree()
-        TreesChopped = TreesChopped + 1
-        print("Returning wood")
-        turtle.turnLeft()
-        WoodHarvested = WoodHarvested + returnWood()
-        print("Grabbing sapling")
-        turtle.turnLeft()
-        grabSapling()
-        print("Grabbing coal")
-        turtle.turnLeft()
-        grabCoal()
-        print("Planting sapling")
-        turtle.turnLeft()
-        plantSapling()
-    else
-        sleep(5)
+    if not success or isNotWood(data) then
+        return false
     end
+    print("Chopping tree")
+    chopTree()
+    return true
+end
+
+local function harvestOne()
+    while true do
+        local now = os.clock()
+        if now - LastReportTime >= ReportInterval then
+            printReport(now)
+            LastReportTime = now
+        end
+        if tryChopTree() then
+            TreesChopped = TreesChopped + 1
+            local wh = service()
+            WoodHarvested = WoodHarvested + wh
+            print("Planting sapling")
+            plantSapling()
+        else
+            sleep(5)
+        end
+    end
+end
+
+local function harvestRow()
+    while true do
+        printReport()
+        extraTurtle.refuelToMin(Length, isNotWood)
+        for _ = 1,Length do
+            -- necessary in case we chopped down a tree last iteration
+            extraTurtle.refuelToMin(1, isNotWood)
+            extraTurtle.tolerantMove("forward")
+            turtle.turnRight()
+            if tryChopTree() then
+                plantSapling()
+                TreesChopped = TreesChopped + 1
+            end
+            turtle.turnLeft()
+        end
+        turtle.turnLeft()
+        turtle.turnLeft()
+        
+        -- order swapped here as we are going in the opposite direction
+        extraTurtle.refuelToMin(Length, isNotWood)
+        for _ = 1,Length do
+            turtle.turnRight()
+            if tryChopTree() then
+                plantSapling()
+                TreesChopped = TreesChopped + 1
+            end
+            turtle.turnLeft()
+            extraTurtle.refuelToMin(1, isNotWood)
+            extraTurtle.tolerantMove("forward")
+        end
+
+        turtle.turnRight()
+        turtle.turnRight()
+        local wh = service()
+        WoodHarvested = WoodHarvested + wh
+        sleep(300)
+    end
+end
+
+if Length == nil then
+    harvestOne()
+else
+    harvestRow()
 end
