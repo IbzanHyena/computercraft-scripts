@@ -12,7 +12,7 @@ if not http then
     return
 end
 
-local response = http.get(textutils.urlEncode(url))
+local response = http.get(url)
 if not response then
     print("failed to connect")
     return
