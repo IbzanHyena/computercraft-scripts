@@ -71,6 +71,7 @@ local function plantSapling()
     for i = 1,16 do
         local data = turtle.getItemDetail(i)
         if data ~= nil and string.find(data.name, "sapling") then
+            turtle.select(i)
             turtle.place()
             return
         end
