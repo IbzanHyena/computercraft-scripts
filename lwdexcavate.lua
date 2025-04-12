@@ -82,6 +82,9 @@ for i = 1,Depth do
     extraTurtle.refuelToMin(1)
     extraTurtle.tolerantMove("down")
     local now = os.clock()
+    if i > 1 then
+        print("----------")
+    end
     print("Completed layer " .. i .. "/" .. Depth)
     print("Elapsed time: " .. (now - startTime) .. " s (" .. ((now - startTime) / i) .. " s/layer)")
     print("Estimated remaining time: " .. ((now - startTime) / i) * (Depth - i) .. " s")
