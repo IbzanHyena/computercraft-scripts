@@ -176,7 +176,7 @@ local function harvestRow()
         local wh = service()
         WoodHarvested = WoodHarvested + wh
         printReport()
-        sleep(300)
+        sleep(120)
     end
 end
 
