@@ -23,15 +23,15 @@ local function chopTree()
 
         turtle.digUp()
         extraTurtle.refuelToMin(1, isNotWood)
-        turtle.tolerantMove("up")
+        extraTurtle.tolerantMove("up")
         height = height + 1
     end
 
     extraTurtle.refuelToMin(height + 1, isNotWood)
     for _ = 1,height do
-        turtle.tolerantMove("down")
+        extraTurtle.tolerantMove("down")
     end
-    turtle.tolerantMove("back")
+    extraTurtle.tolerantMove("back")
 end
 
 local function returnWood()
