@@ -69,8 +69,6 @@ else
         extraTurtle.refuelToMin(Length * Width)
         path:walk(turtle.digDown, s.inReverse)
         turtle.digDown()
-        extraTurtle.refuelToMin(1)
-        extraTurtle.tolerantMove("down")
         turtle.turnRight()
         turtle.turnRight()
         s.inReverse = not s.inReverse
