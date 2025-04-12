@@ -108,12 +108,14 @@ local function service()
     return wh
 end
 
-local function printReport(now)
+local function printReport(separator, now)
     if now == nil then now = os.clock() end
+    if separator == nil or separator then
+        print("----------")
+    end
     print("Now harvested " .. WoodHarvested .. " wood (" .. TreesChopped .. " trees)")
     print("Time taken: " .. now - StartTime .. " s")
     print("Rate: " .. WoodHarvested / (now - StartTime) .. " wood/s")
-    print("----------")
 end
 
 local function tryChopTree()
@@ -129,10 +131,11 @@ local function tryChopTree()
 end
 
 local function harvestOne()
+    local first = true
     while true do
         local now = os.clock()
         if now - LastReportTime >= ReportInterval then
-            printReport(now)
+            printReport(not first, now)
             LastReportTime = now
         end
         if tryChopTree() then
@@ -143,10 +146,12 @@ local function harvestOne()
         else
             sleep(5)
         end
+        first = false
     end
 end
 
 local function harvestRow()
+    local first = true
     while true do
         local iterationStart = os.clock()
         -- service at the start to pick up and saplings that have been collected
@@ -185,9 +190,10 @@ local function harvestRow()
         turtle.turnRight()
         local wh = service()
         WoodHarvested = WoodHarvested + wh
-        printReport()
+        printReport(not first)
         local iterationEnd = os.clock()
         sleep(math.max(RowCheckInterval - (iterationEnd - iterationStart), 0))
+        first = false
     end
 end
 
