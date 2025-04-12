@@ -1,5 +1,7 @@
 local argv = { ... }
 
+local RowCheckInterval = 120  -- seconds
+
 if not os.loadAPI("/apis/extraTurtle") then
     print("Failed to load extraTurtle API")
 end
@@ -143,6 +145,7 @@ end
 
 local function harvestRow()
     while true do
+        local iterationStart = os.clock()
         -- service at the start to pick up and saplings that have been collected
         -- since the last iteration
         local wh = service()
@@ -161,7 +164,7 @@ local function harvestRow()
         end
         turtle.turnLeft()
         turtle.turnLeft()
-        
+
         -- order swapped here as we are going in the opposite direction
         extraTurtle.refuelToMin(Length, isNotWood)
         for _ = 1,Length do
@@ -180,7 +183,8 @@ local function harvestRow()
         local wh = service()
         WoodHarvested = WoodHarvested + wh
         printReport()
-        sleep(120)
+        local iterationEnd = os.clock()
+        sleep(math.max(RowCheckInterval - (iterationEnd - iterationStart), 0))
     end
 end
 
