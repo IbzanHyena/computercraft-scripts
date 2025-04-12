@@ -47,9 +47,11 @@ local function grabSaplings()
         if data ~= nil and string.find(data.name, "sapling") then
             turtle.select(i)
             turtle.suck(64 - data.count)
-            break
+            return
         end
     end
+    -- we found no saplings, so just grab into this slot
+    turtle.suck()
 end
 
 local function returnWood()
