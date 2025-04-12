@@ -17,6 +17,7 @@ local installTargets = {}
 for w in response.readAll():gmatch("[^\r\n]+") do
     table.insert(installTargets, w)
 end
+response.close()
 print("Installing " .. #installTargets .. " files")
 
 local function install(target)
@@ -43,6 +44,7 @@ local function install(target)
     end
     local file = fs.open(targetPath, "w")
     file.write(response.readAll())
+    response.close()
     file.close()
     print(" success")
 end

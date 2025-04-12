@@ -26,3 +26,4 @@ end
 
 file.write(response.readAll())
 file.close()
+response.close()
