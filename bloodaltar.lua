@@ -28,7 +28,7 @@ end
 
 local function fillInventory()
     for i = 1,16 do
-        if not turtle.getItemCount(i) then
+        if turtle.getItemCount(i) == 0 then
             for j = 1,16 do
                 if i ~= j and turtle.getItemCount(j) > 1 then
                     turtle.select(j)
