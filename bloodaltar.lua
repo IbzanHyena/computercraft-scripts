@@ -56,8 +56,26 @@ local function makeSpace()
     end
 end
 
+local found = false
+for i = 1,16 do
+    if isOutput(turtle.getItemDetail(i)) then
+        found = true
+        break
+    end
+end
+if not found then
+    print("no output item found")
+    return
+end
+
 -- fill the inventory with items to remove any free slots
 fillInventory()
+for i = 1,16 do
+    if turtle.getItemCount(i) == 0 then
+        print("could not fill inventory")
+        return
+    end
+end
 
 while true do
     -- start by retrieving an input item
