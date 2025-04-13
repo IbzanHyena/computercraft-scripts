@@ -39,11 +39,33 @@ local function fillInventory()
     end
 end
 
+local function makeSpace()
+    for i = 1,16 do
+        local iData = turtle.getItemDetail(i)
+        if not iData then return end
+        if iData and iData.count == 1 then
+            for j = 1,16 do
+                local jData = turtle.getItemDetail(j)
+                if i ~= j and iData.name == jData.name then
+                    turtle.select(i)
+                    turtle.transferTo(j, 1)
+                    return
+                end
+            end
+        end
+    end
+end
+
 -- fill the inventory with items to remove any free slots
 fillInventory()
 
 while true do
-    -- start by placing items in the altar
+    -- start by retrieving an input item
+    makeSpace()
+    turtle.turnLeft()
+    turtle.suck(1)
+    turtle.turnRight()
+    -- place the input item in the altar
     select(isInput)
     turtle.drop(Concurrency)
     fillInventory()
