@@ -6,7 +6,7 @@ end
 
 local Input = string.lower(argv[1])
 local Output = string.lower(argv[2])
-local Concurrency = tonumber[argv[3]] or 1
+local Concurrency = tonumber(argv[3]) or 1
 
 local function isInput(data)
     return data ~= nil and string.find(string.lower(data.name), Input) ~= nil
