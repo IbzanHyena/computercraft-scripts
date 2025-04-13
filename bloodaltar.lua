@@ -91,6 +91,10 @@ while true do
         print("could not find input item")
         return
     end
+    -- wait for redstone input on the right
+    while redstone.getInput("right") do
+        sleep(0.1)
+    end
     turtle.drop(Concurrency)
     fillInventory()
     -- now wait for it to be complete
