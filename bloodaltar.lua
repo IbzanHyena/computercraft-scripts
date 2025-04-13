@@ -90,6 +90,6 @@ while true do
     -- now wait for it to be complete
     select(isOutput)
     repeat
-        sleep(1)
+        sleep(0.1)
     until turtle.suck()
 end
