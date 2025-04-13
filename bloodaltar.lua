@@ -83,13 +83,23 @@ while true do
     turtle.turnLeft()
     if not turtle.suck(1) then
         print("could not retrieve input item")
-        return
+        break
     end
+
+    -- drop off any excess output items
+    select(isOutput)
+    local count = turtle.getItemCount()
+    if count > 1 then
+        turtle.turnLeft()
+        turtle.drop(count - 1)
+        turtle.turnRight()
+    end
+
     turtle.turnRight()
     -- place the input item in the altar
     if not select(isInput) then
         print("could not find input item")
-        return
+        break
     end
     -- wait for redstone input on the right
     while redstone.getInput("right") do
@@ -103,3 +113,12 @@ while true do
         sleep(0.1)
     until turtle.suck()
 end
+
+-- drop off any output items
+turtle.turnLeft()
+turtle.turnLeft()
+while select(isOutput) do
+    turtle.drop()
+end
+turtle.turnRight()
+turtle.turnRight()
