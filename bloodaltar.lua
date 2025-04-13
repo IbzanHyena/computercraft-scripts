@@ -81,10 +81,16 @@ while true do
     -- start by retrieving an input item
     makeSpace()
     turtle.turnLeft()
-    turtle.suck(1)
+    if not turtle.suck(1) then
+        print("could not retrieve input item")
+        return
+    end
     turtle.turnRight()
     -- place the input item in the altar
-    select(isInput)
+    if not select(isInput) then
+        print("could not find input item")
+        return
+    end
     turtle.drop(Concurrency)
     fillInventory()
     -- now wait for it to be complete
