@@ -4,16 +4,16 @@ if #argv ~= 2 and #argv ~= 3 then
     print("Usage: bloodaltar <input> <output> [concurrency]")
 end
 
-local Input = argv[1]
-local Output = argv[2]
+local Input = string.lower(argv[1])
+local Output = string.lower(argv[2])
 local Concurrency = tonumber[argv[3]] or 1
 
 local function isInput(data)
-    return data ~= nil and string.find(data.name, Input) ~= nil
+    return data ~= nil and string.find(string.lower(data.name), Input) ~= nil
 end
 
 local function isOutput(data)
-    return data ~= nil and string.find(data.name, Output) ~= nil
+    return data ~= nil and string.find(string.lower(data.name), Output) ~= nil
 end
 
 local function select(predicate)
