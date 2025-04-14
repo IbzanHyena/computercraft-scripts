@@ -104,7 +104,7 @@ while true do
     -- place the input item in the altar
     if not select(isInput) then
         print("could not find input item")
-        break
+        return
     end
     -- wait for redstone input on the right
     while redstone.getInput("right") do
@@ -120,7 +120,6 @@ while true do
 end
 
 -- drop off any output items
-turtle.turnLeft()
 turtle.turnLeft()
 while select(isOutput) do
     turtle.drop()
