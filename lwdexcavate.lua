@@ -63,7 +63,7 @@ elseif Length == 1 then
         return toDig
     end
 elseif Width == 1 then
-    digLayer = function ()
+    digLayer = function (toDig)
         extraTurtle.refuelToMin(Length)
         for i = 1,Length-1 do
             dig(toDig)
@@ -79,6 +79,7 @@ elseif (Length % 2 == 0) or (Width % 2 == 0) then
     digLayer = function (toDig)
         extraTurtle.refuelToMin(Length * Width)
         path:walk(function () dig(toDig) end)
+        return toDig
     end
 else
     local path = extraTurtle.GridPath:new(Length, Width)
@@ -89,6 +90,7 @@ else
         turtle.turnRight()
         turtle.turnRight()
         s.inReverse = not s.inReverse
+        return toDig
     end
     state.inReverse = false
 end
