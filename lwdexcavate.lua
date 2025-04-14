@@ -58,6 +58,7 @@ elseif Length == 1 then
             extraTurtle.tolerantMove("forward")
         end
         turtle.digDown()
+        if toDig == 3 then turtle.digUp() end
         turtle.turnRight()
         turtle.turnRight()
         return toDig
@@ -70,6 +71,7 @@ elseif Width == 1 then
             extraTurtle.tolerantMove("forward")
         end
         turtle.digDown()
+        if toDig == 3 then turtle.digUp() end
         turtle.turnRight()
         turtle.turnRight()
         return toDig
