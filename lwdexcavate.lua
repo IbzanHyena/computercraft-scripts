@@ -102,14 +102,14 @@ while remaining > 0 do
     if toDig == 2 then
         -- we must move down an extra block so that the equal level is filled
         extraTurtle.refuelToMin(1)
-        extraTurtle.digDown()
+        turtle.digDown()
         extraTurtle.tolerantMove("down")
     elseif toDig == 3 then
         -- we must move down two extra blocks so that equal and above levels are filled
         extraTurtle.refuelToMin(2)
-        extraTurtle.digDown()
+        turtle.digDown()
         extraTurtle.tolerantMove("down")
-        extraTurtle.digDown()
+        turtle.digDown()
         extraTurtle.tolerantMove("down")
     end
     local dug = digLayer(toDig, state)
