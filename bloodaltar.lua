@@ -94,7 +94,7 @@ while true do
     -- drop off any excess output items
     select(isOutput)
     local count = turtle.getItemCount()
-    if count > 63 then
+    if count > 64 - Concurrency then
         turtle.turnLeft()
         turtle.drop(count - 1)
         turtle.turnRight()
