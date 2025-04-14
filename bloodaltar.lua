@@ -8,6 +8,11 @@ local Input = string.lower(argv[1])
 local Output = string.lower(argv[2])
 local Concurrency = tonumber(argv[3]) or 1
 
+if Concurrency < 1 or Concurrency > 63 then
+    print("concurrency must be in 1..63")
+    return
+end
+
 local function isInput(data)
     return data ~= nil and string.find(string.lower(data.name), Input) ~= nil
 end
