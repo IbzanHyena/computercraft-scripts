@@ -18,6 +18,7 @@ local function displayStateColour(monitor, state)
     monitor.clear()
 
     -- featheredKnife
+    monitor.setCursorPos(1, 1)
     monitor.setTextColour(colours.yellow)
     monitor.write("F")
     monitor.setTextColour(colours.white)
@@ -34,6 +35,7 @@ local function displayStateColour(monitor, state)
     monitor.write("\n")
 
     -- regeneration
+    monitor.setCursorPos(1, 2)
     monitor.setTextColour(colours.yellow)
     monitor.write("R")
     monitor.setTextColour(colours.white)
@@ -53,6 +55,7 @@ local function displayStateNoColour(monitor, state)
     monitor.clear()
 
     -- featheredKnife
+    monitor.setCursorPos(1, 1)
     monitor.write("[F]eathered knife: ")
     if state.featheredKnife then
         monitor.write("on")
@@ -62,6 +65,7 @@ local function displayStateNoColour(monitor, state)
     monitor.write("\n")
 
     -- regeneration
+    monitor.setCursorPos(1, 2)
     monitor.write("[R]egenration: ")
     if state.regeneration then
         monitor.write("on")
