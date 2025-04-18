@@ -32,7 +32,6 @@ local function displayStateColour(monitor, state)
     end
 
     monitor.setTextColour(colours.white)
-    monitor.write("\n")
 
     -- regeneration
     monitor.setCursorPos(1, 2)
@@ -48,6 +47,7 @@ local function displayStateColour(monitor, state)
         monitor.write("off")
     end
 
+    monitor.setCursorPos(1, 3)
     monitor.setTextColour(colours.white)
 end
 
@@ -62,7 +62,6 @@ local function displayStateNoColour(monitor, state)
     else
         monitor.write("off")
     end
-    monitor.write("\n")
 
     -- regeneration
     monitor.setCursorPos(1, 2)
@@ -72,7 +71,8 @@ local function displayStateNoColour(monitor, state)
     else
         monitor.write("off")
     end
-    monitor.write("\n")
+
+    monitor.setCursorPos(1, 3)
 end
 
 local function displayState(monitor, state)
