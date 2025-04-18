@@ -23,7 +23,7 @@ local function displayStateColour(monitor, state)
     monitor.write("F")
     monitor.setTextColour(colours.white)
     monitor.write("eathered Knife: ")
-    if state.featheredKnife then
+    if state["featheredKnife"] then
         monitor.setTextColour(colours.green)
         monitor.write("on")
     else
@@ -100,13 +100,11 @@ for _, side in pairs(sides) do
     end
 end
 
-local function displayStateAll()
+local function displayStateAll(state)
     for _, monitor in pairs(Monitors) do
-        displayState(monitor, State)
+        displayState(monitor, state)
     end
 end
-
-displayStateAll()
 
 if ModemSide == nil then
     print("Unable to find modem")
@@ -129,6 +127,7 @@ end
 rednet.open(ModemSide)
 rednet.host("altarcontrol", "controller")
 local State = readState()
+displayStateAll(State)
 waitForReceivers()
 rednet.broadcast(State, "altarcontrol")
 
