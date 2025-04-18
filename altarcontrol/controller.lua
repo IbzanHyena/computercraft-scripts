@@ -143,6 +143,7 @@ while true do
     end
 
     if stateChanged then
+        writeState(State)
         displayStateAll(State)
         rednet.broadcast(State, "altarcontrol")
     end
