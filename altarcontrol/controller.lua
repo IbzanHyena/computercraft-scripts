@@ -87,8 +87,18 @@ if not fs.exists(StateFile) then
     writeState({featheredKnife=false, regeneration=false})
 end
 
+local sides = peripheral.getNames()
 local Monitors = {term}
-local State = readState()
+local ModemSide = nil
+
+for _, side in pairs(sides) do
+    local t = peripheral.getType(side)
+    if ModemSide == nil and t == "modem" then
+        ModemSide = side
+    elseif t == "monitor" then
+        table.insert(Monitors, peripheral.wrap(side))
+    end
+end
 
 local function displayStateAll()
     for _, monitor in pairs(Monitors) do
@@ -97,8 +107,33 @@ local function displayStateAll()
 end
 
 displayStateAll()
+
+if ModemSide == nil then
+    print("Unable to find modem")
+    return
+end
+
+local function waitForReceivers()
+    local fk, r
+    while true do
+        fk = rednet.lookup("altarcontrol", "featheredKnife")
+        r = rednet.lookup("altarcontrol", "regeneration")
+        if fk ~= nil and r ~= nil then
+            return
+        end
+        sleep(1)
+    end
+end
+
+
+rednet.open(ModemSide)
+rednet.host("altarcontrol", "controller")
+local State = readState()
+waitForReceivers()
+rednet.broadcast(State, "altarcontrol")
+
 while true do
-    local event, key, isHeld = os.pullEvent("key")
+    local _, key, _ = os.pullEvent("key")
     local stateChanged = false
     if key == keys.f then
         State.featheredKnife = not State.featheredKnife
@@ -110,5 +145,6 @@ while true do
 
     if stateChanged then
         displayStateAll()
+        rednet.broadcast(State, "altarcontrol")
     end
 end
