@@ -1,0 +1,19 @@
+{
+    [ "*" ] = {
+        "install",
+        "wget",
+    },
+    turtle = {
+        "apis/extraTurtle",
+        "farm",
+        "lumberjack",
+        "lwdexcavate",
+        "mine",
+    },
+    bloodaltar = {
+        "altarcontrol/controller",
+        "altarcontrol/featheredknife",
+        "apis/altarcontrol",
+        "bloodaltar",
+    },
+}

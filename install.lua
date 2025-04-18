@@ -1,7 +1,8 @@
 local argv = { ... }
 
 local urlRoot = "https://raw.githubusercontent.com/IbzanHyena/computercraft-scripts/refs/heads/main/"
-local installRoot = argv[1] or "/"
+local targetGroup = argv[1] or "*"
+local installRoot = argv[2] or "/"
 
 if installRoot:sub(-1) ~= "/" then
     installRoot = installRoot .. "/"
@@ -13,12 +14,8 @@ if not response then
     return
 end
 
-local installTargets = {}
-for w in response.readAll():gmatch("[^\r\n]+") do
-    table.insert(installTargets, w)
-end
+local installTargets = textutils.unserialise(response.readAll())
 response.close()
-print("Installing " .. #installTargets .. " files")
 
 local function install(target)
     io.write("Installing " .. target .. "...")
@@ -49,6 +46,15 @@ local function install(target)
     print(" success")
 end
 
-for _, t in ipairs(installTargets) do
-    install(t)
+local function installGroup(tg)
+    if targetGroup == "*" or tg == "*" or string.find(targetGroup, tg) then
+        print("Installing target group " .. tg)
+        for _, target in pairs(tg) do
+            install(target)
+        end
+    end
+end
+
+for _, tg in pairs(installTargets) do
+    installGroup(tg)
 end
