@@ -17,8 +17,12 @@ local function isWood(data)
     return data ~= nil and string.find(data.name, "log") ~= nil
 end
 
-local function isNotWood(data)
-    return not isWood(data)
+local function isSapling(data)
+    return data ~= nil and string.find(data.name, "sapling") ~= nil
+end
+
+local function isNotWoodOrSapling(data)
+    return not isWood(data) and not isSapling(data)
 end
 
 local function chopTree()
@@ -33,12 +37,12 @@ local function chopTree()
         end
 
         turtle.digUp()
-        extraTurtle.refuelToMin(1, isNotWood)
+        extraTurtle.refuelToMin(1, isNotWoodOrSapling)
         extraTurtle.tolerantMove("up")
         height = height + 1
     end
 
-    extraTurtle.refuelToMin(height + 1, isNotWood)
+    extraTurtle.refuelToMin(height + 1, isNotWoodOrSapling)
     extraTurtle.tolerantMove("down", height)
     extraTurtle.tolerantMove("back")
 end
@@ -46,9 +50,9 @@ end
 local function grabSaplings()
     for i = 1,16 do
         local data = turtle.getItemDetail(i)
-        if data ~= nil and string.find(data.name, "sapling") then
+        if isSapling(data) then
             turtle.select(i)
-            turtle.suck(64 - data.count)
+            turtle.suck(Length * 2 - data.count)
             return
         end
     end
@@ -72,18 +76,20 @@ end
 local function grabCoal()
     for i = 1,16 do
         local data = turtle.getItemDetail(i)
-        if data ~= nil and data.name == "minecraft:coal" then
+        if isNotWoodOrSapling(data) then
             turtle.select(i)
             turtle.suck(64 - data.count)
-            break
+            return
         end
     end
+    -- we found no fuel, so just grag into this slot
+    turtle.suck()
 end
 
 local function plantSapling()
     for i = 1,16 do
         local data = turtle.getItemDetail(i)
-        if data ~= nil and string.find(data.name, "sapling") then
+        if isSapling(data) then
             turtle.select(i)
             turtle.place()
             return
@@ -123,7 +129,7 @@ local function tryChopTree()
     if not success then
         plantSapling()
         return false
-    elseif isNotWood(data) then
+    elseif isNotWoodOrSapling(data) then
         return false
     end
     chopTree()
@@ -158,10 +164,10 @@ local function harvestRow()
         -- since the last iteration
         local wh = service()
         WoodHarvested = WoodHarvested + wh
-        extraTurtle.refuelToMin(Length, isNotWood)
+        extraTurtle.refuelToMin(Length, isNotWoodOrSapling)
         for _ = 1,Length do
             -- necessary in case we chopped down a tree last iteration
-            extraTurtle.refuelToMin(1, isNotWood)
+            extraTurtle.refuelToMin(1, isNotWoodOrSapling)
             extraTurtle.tolerantMove("forward")
             turtle.turnRight()
             if tryChopTree() then
@@ -174,7 +180,7 @@ local function harvestRow()
         turtle.turnLeft()
 
         -- order swapped here as we are going in the opposite direction
-        extraTurtle.refuelToMin(Length, isNotWood)
+        extraTurtle.refuelToMin(Length, isNotWoodOrSapling)
         for _ = 1,Length do
             turtle.turnRight()
             if tryChopTree() then
@@ -182,7 +188,7 @@ local function harvestRow()
                 TreesChopped = TreesChopped + 1
             end
             turtle.turnLeft()
-            extraTurtle.refuelToMin(1, isNotWood)
+            extraTurtle.refuelToMin(1, isNotWoodOrSapling)
             extraTurtle.tolerantMove("forward")
         end
 
