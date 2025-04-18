@@ -39,7 +39,7 @@ local function displayStateColour(monitor, state)
     monitor.write("R")
     monitor.setTextColour(colours.white)
     monitor.write("egenration: ")
-    if state.regeneration then
+    if state["regeneration"] then
         monitor.setTextColour(colours.green)
         monitor.write("on")
     else
@@ -57,7 +57,7 @@ local function displayStateNoColour(monitor, state)
     -- featheredKnife
     monitor.setCursorPos(1, 1)
     monitor.write("[F]eathered knife: ")
-    if state.featheredKnife then
+    if state["featheredKnife"] then
         monitor.write("on")
     else
         monitor.write("off")
@@ -66,7 +66,7 @@ local function displayStateNoColour(monitor, state)
     -- regeneration
     monitor.setCursorPos(1, 2)
     monitor.write("[R]egenration: ")
-    if state.regeneration then
+    if state["regeneration"] then
         monitor.write("on")
     else
         monitor.write("off")
@@ -135,10 +135,10 @@ while true do
     local _, key, _ = os.pullEvent("key")
     local stateChanged = false
     if key == keys.f then
-        State.featheredKnife = not State.featheredKnife
+        State["featheredKnife"] = not State["featheredKnife"]
         stateChanged = true
     elseif key == keys.r then
-        State.regeneration = not State.regeneration
+        State["regeneration"] = not State["regeneration"]
         stateChanged = true
     end
 
