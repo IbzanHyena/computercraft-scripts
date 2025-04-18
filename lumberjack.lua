@@ -52,7 +52,7 @@ local function grabSaplings()
         local data = turtle.getItemDetail(i)
         if isSapling(data) then
             turtle.select(i)
-            turtle.suck(Length * 2 - data.count)
+            turtle.suck(math.max(0, Length * 2 - data.count))
             return
         end
     end
