@@ -20,7 +20,7 @@ function RunReceiver(hostname)
         local _, message = rednet.receive("altarcontrol")
         if message[hostname] ~= nil then
             for _, side in pairs(redstone.getSides()) do
-                redstone.setOutput(side, true)
+                redstone.setOutput(side, message[hostname])
             end
         end
     end
