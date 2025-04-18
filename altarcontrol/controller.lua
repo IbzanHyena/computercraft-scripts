@@ -2,14 +2,14 @@ local StateFile = "/state"
 
 local function readState()
     local file = fs.open(StateFile, "r")
-    local result = textutils.unserialiseJSON(file.readAll())
+    local result = textutils.unserialise(file.readAll())
     file.close()
     return result
 end
 
 local function writeState(state)
     local file = fs.open(StateFile, "w")
-    file.write(textutils.serialiseJSON(state))
+    file.write(textutils.serialise(state))
     file.flush()
     file.close()
 end
@@ -84,9 +84,15 @@ if not fs.exists(StateFile) then
 end
 
 local Monitors = {term}
-
 local State = readState()
 
+local function displayStateAll()
+    for _, monitor in pairs(Monitors) do
+        displayState(monitor, State)
+    end
+end
+
+displayStateAll()
 while true do
     local event, key, isHeld = os.pullEvent("key")
     local stateChanged = false
@@ -99,8 +105,6 @@ while true do
     end
 
     if stateChanged then
-        for _, monitor in pairs(Monitors) do
-            displayState(monitor, State)
-        end
+        displayStateAll()
     end
 end
