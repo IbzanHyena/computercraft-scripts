@@ -13,6 +13,7 @@
     bloodaltar = {
         "altarcontrol/controller",
         "altarcontrol/featheredknife",
+        "altarcontrol/regeneration",
         "apis/altarcontrol",
         "bloodaltar",
     },
