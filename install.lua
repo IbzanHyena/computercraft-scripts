@@ -8,7 +8,7 @@ if installRoot:sub(-1) ~= "/" then
     installRoot = installRoot .. "/"
 end
 
-local response = http.get(urlRoot .. "installTargets.txt")
+local response = http.get(urlRoot .. "installTargets")
 if not response then
     print("unable to retrieve install targets")
     return
@@ -46,15 +46,15 @@ local function install(target)
     print(" success")
 end
 
-local function installGroup(tg)
-    if targetGroup == "*" or tg == "*" or string.find(targetGroup, tg) then
-        print("Installing target group " .. tg)
+local function installGroup(k, tg)
+    if targetGroup == "*" or tg == "*" or string.find(targetGroup, k) then
+        print("Installing target group " .. k)
         for _, target in pairs(tg) do
             install(target)
         end
     end
 end
 
-for _, tg in pairs(installTargets) do
-    installGroup(tg)
+for k, tg in pairs(installTargets) do
+    installGroup(k, tg)
 end
