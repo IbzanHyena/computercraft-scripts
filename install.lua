@@ -47,7 +47,7 @@ local function install(target)
 end
 
 local function installGroup(k, tg)
-    if targetGroup == "*" or tg == "*" or string.find(targetGroup, k) then
+    if targetGroup == "*" or k == "*" or string.find(targetGroup, k) then
         print("Installing target group " .. k)
         for _, target in pairs(tg) do
             install(target)
