@@ -20,7 +20,8 @@ function RunReceiver(hostname)
         local _, message = rednet.receive("altarcontrol")
         if message[hostname] ~= nil then
             for _, side in pairs(redstone.getSides()) do
-                redstone.setOutput(side, message[hostname])
+                -- redstone on = ritual disabled
+                redstone.setOutput(side, not message[hostname])
             end
         end
     end
