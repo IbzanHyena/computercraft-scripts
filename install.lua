@@ -9,9 +9,12 @@ if targetGroup == nil and fs.exists(identityFile) then
     local file = fs.open(identityFile, "r")
     targetGroup = file.readAll()
     file.close()
+    print("Identity file found: " .. targetGroup)
 elseif targetGroup == nil then
+    print("No identity found or provided; using *")
     targetGroup = "*"
 elseif targetGroup ~= nil then
+    print("Writing identity file: " .. targetGroup)
     local file = fs.open(identityFile, "w")
     file.write(targetGroup)
     file.flush()
