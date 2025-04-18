@@ -21,6 +21,11 @@ local function isSapling(data)
     return data ~= nil and string.find(data.name, "sapling") ~= nil
 end
 
+local function isNotWood(data)
+    return not isWood(data)
+    
+end
+
 local function isNotWoodOrSapling(data)
     return not isWood(data) and not isSapling(data)
 end
@@ -129,7 +134,7 @@ local function tryChopTree()
     if not success then
         plantSapling()
         return false
-    elseif isNotWoodOrSapling(data) then
+    elseif isNotWood(data) then
         return false
     end
     chopTree()
