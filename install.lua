@@ -1,8 +1,22 @@
 local argv = { ... }
 
+local identityFile = "/identity"
 local urlRoot = "https://raw.githubusercontent.com/IbzanHyena/computercraft-scripts/refs/heads/main/"
-local targetGroup = argv[1] or "*"
+local targetGroup = argv[1]
 local installRoot = argv[2] or "/"
+
+if targetGroup == nil and fs.exists(identityFile) then
+    local file = fs.open(identityFile, "r")
+    targetGroup = file.readAll()
+    file.close()
+elseif targetGroup == nil then
+    targetGroup = "*"
+elseif targetGroup ~= nil then
+    local file = fs.open(identityFile, "w")
+    file.write(targetGroup)
+    file.flush()
+    file.close()
+end
 
 if installRoot:sub(-1) ~= "/" then
     installRoot = installRoot .. "/"
