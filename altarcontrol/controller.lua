@@ -18,35 +18,35 @@ local function displayStateColour(monitor, state)
     monitor.clear()
 
     -- featheredKnife
-    monitor.setTextColour("yellow")
+    monitor.setTextColour(colours.yellow)
     monitor.write("F")
-    monitor.setTextColour("white")
+    monitor.setTextColour(colours.white)
     monitor.write("eathered Knife: ")
     if state.featheredKnife then
-        monitor.setTextColour("green")
+        monitor.setTextColour(colours.green)
         monitor.write("on")
     else
-        monitor.setTextColour("red")
+        monitor.setTextColour(colours.red)
         monitor.write("off")
     end
 
-    monitor.setTextColour("white")
+    monitor.setTextColour(colours.white)
     monitor.write("\n")
 
     -- regeneration
-    monitor.setTextColour("yellow")
+    monitor.setTextColour(colours.yellow)
     monitor.write("R")
-    monitor.setTextColour("white")
+    monitor.setTextColour(colours.white)
     monitor.write("egenration: ")
     if state.regeneration then
-        monitor.setTextColour("green")
+        monitor.setTextColour(colours.green)
         monitor.write("on")
     else
-        monitor.setTextColour("red")
+        monitor.setTextColour(colours.red)
         monitor.write("off")
     end
 
-    monitor.setTextColour("white")
+    monitor.setTextColour(colours.white)
 end
 
 local function displayStateNoColour(monitor, state)
