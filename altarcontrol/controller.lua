@@ -38,7 +38,7 @@ local function displayStateColour(monitor, state)
     monitor.setTextColour(colours.yellow)
     monitor.write("R")
     monitor.setTextColour(colours.white)
-    monitor.write("egenration: ")
+    monitor.write("egeneration: ")
     if state["regeneration"] then
         monitor.setTextColour(colours.green)
         monitor.write("on")
@@ -65,7 +65,7 @@ local function displayStateNoColour(monitor, state)
 
     -- regeneration
     monitor.setCursorPos(1, 2)
-    monitor.write("[R]egenration: ")
+    monitor.write("[R]egeneration: ")
     if state["regeneration"] then
         monitor.write("on")
     else
