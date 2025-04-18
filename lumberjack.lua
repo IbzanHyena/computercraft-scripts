@@ -76,7 +76,7 @@ end
 local function grabCoal()
     for i = 1,16 do
         local data = turtle.getItemDetail(i)
-        if isNotWoodOrSapling(data) then
+        if data.count > 0 and isNotWoodOrSapling(data) then
             turtle.select(i)
             turtle.suck(64 - data.count)
             return
