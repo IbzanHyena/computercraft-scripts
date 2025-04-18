@@ -6,3 +6,4 @@ mine
 wget
 lumberjack
 bloodaltar
+altarcontrol/controller
