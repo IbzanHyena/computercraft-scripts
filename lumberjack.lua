@@ -62,7 +62,7 @@ local function grabSaplings()
         end
     end
     -- we found no saplings, so just grab into this slot
-    turtle.suck()
+    turtle.suck(Length * 2)
 end
 
 local function returnWood()
