@@ -7,6 +7,6 @@ wget
 lumberjack
 bloodaltar
 altarcontrol/controller
-altarcontrol/featheredKnife
+altarcontrol/featheredknife
 altarcontrol/regeneration
 apis/altarcontrol
