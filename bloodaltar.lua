@@ -135,6 +135,6 @@ end
 turtle.turnRight()
 turtle.turnRight()
 
-if turtle.select(isBloodOrb) then
+if select(isBloodOrb) then
     turtle.drop()
 end
