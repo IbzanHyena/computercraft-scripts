@@ -78,7 +78,7 @@ local function returnWood()
     return woodReturned
 end
 
-local function grabCoal()
+local function grabFuel()
     for i = 1,16 do
         local data = turtle.getItemDetail(i)
         if data ~= nil and data.count > 0 and isNotWoodOrSapling(data) then
@@ -114,7 +114,7 @@ local function service()
     turtle.turnLeft()
     grabSaplings()
     turtle.turnLeft()
-    grabCoal()
+    grabFuel()
     turtle.turnLeft()
     return wh
 end
