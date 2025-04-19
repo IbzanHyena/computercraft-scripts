@@ -15,6 +15,15 @@ local function writeState(state)
 end
 
 local function displayStateColour(monitor, state)
+    if monitor.setTextScale then
+        local w, h = monitor.getSize()
+        local maxW, maxH = #"Feathered knife: off", 2
+        local scaleW, scaleH = w/maxW, h/maxH
+        scaleW, scaleH = scaleW*2, scaleH*2
+        scaleW, scaleH = math.floor(scaleW+0.5), math.floor(scaleH+0.5)
+        scaleW, scaleH = scaleW/2, scaleW/2
+        monitor.setTextScale(scaleW, scaleH)
+    end
     monitor.clear()
 
     -- featheredKnife
@@ -52,6 +61,15 @@ local function displayStateColour(monitor, state)
 end
 
 local function displayStateNoColour(monitor, state)
+    if monitor.setTextScale then
+        local w, h = monitor.getSize()
+        local maxW, maxH = #"[F]eathered knife: off", 2
+        local scaleW, scaleH = w/maxW, h/maxH
+        scaleW, scaleH = scaleW*2, scaleH*2
+        scaleW, scaleH = math.floor(scaleW+0.5), math.floor(scaleH+0.5)
+        scaleW, scaleH = scaleW/2, scaleW/2
+        monitor.setTextScale(scaleW, scaleH)
+    end
     monitor.clear()
 
     -- featheredKnife
