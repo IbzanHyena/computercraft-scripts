@@ -1,9 +1,14 @@
 local argv = { ... }
 
-local identityFile = "/identity"
 local urlRoot = "https://raw.githubusercontent.com/IbzanHyena/computercraft-scripts/refs/heads/main/"
 local targetGroup = argv[1]
 local installRoot = argv[2] or "/"
+
+if installRoot:sub(-1) ~= "/" then
+    installRoot = installRoot .. "/"
+end
+
+local identityFile = installRoot .. "identity"
 
 if targetGroup == nil and fs.exists(identityFile) then
     local file = fs.open(identityFile, "r")
@@ -19,10 +24,6 @@ elseif targetGroup ~= nil then
     file.write(targetGroup)
     file.flush()
     file.close()
-end
-
-if installRoot:sub(-1) ~= "/" then
-    installRoot = installRoot .. "/"
 end
 
 local response = http.get(urlRoot .. "installTargets")
