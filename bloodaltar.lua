@@ -13,12 +13,20 @@ if Concurrency < 1 or Concurrency > 63 then
     return
 end
 
+local function is(data, needle)
+    return data ~= nil and string.find(string.lower(data.name), needle) ~= nil
+end
+
 local function isInput(data)
-    return data ~= nil and string.find(string.lower(data.name), Input) ~= nil
+    return is(data, Input)
 end
 
 local function isOutput(data)
-    return data ~= nil and string.find(string.lower(data.name), Output) ~= nil
+    return is(data, Output)
+end
+
+local function isBloodOrb(data)
+    return is(data, "bloodorb")
 end
 
 local function select(predicate)
@@ -126,3 +134,7 @@ while select(isOutput) do
 end
 turtle.turnRight()
 turtle.turnRight()
+
+if turtle.select(isBloodOrb) then
+    turtle.drop()
+end
