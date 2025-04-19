@@ -15,6 +15,7 @@ local function writeState(state)
 end
 
 local function setScale(monitor, maxW, maxH)
+    monitor.setTextScale(1)
     local w, h = monitor.getSize()
     local scaleW, scaleH = w/maxW, h/maxH
     scaleW, scaleH = scaleW*2, scaleH*2
