@@ -14,15 +14,20 @@ local function writeState(state)
     file.close()
 end
 
+local function setScale(monitor, maxW, maxH)
+    local w, h = monitor.getSize()
+    local scaleW, scaleH = w/maxW, h/maxH
+    scaleW, scaleH = scaleW*2, scaleH*2
+    scaleW, scaleH = math.floor(scaleW+0.5), math.floor(scaleH+0.5)
+    scaleW, scaleH = scaleW/2, scaleW/2
+    local scale = math.min(scaleW, scaleH)
+    monitor.setTextScale(scale)
+end
+
 local function displayStateColour(monitor, state)
     if monitor.setTextScale then
-        local w, h = monitor.getSize()
         local maxW, maxH = #"Feathered knife: off", 2
-        local scaleW, scaleH = w/maxW, h/maxH
-        scaleW, scaleH = scaleW*2, scaleH*2
-        scaleW, scaleH = math.floor(scaleW+0.5), math.floor(scaleH+0.5)
-        scaleW, scaleH = scaleW/2, scaleW/2
-        monitor.setTextScale(scaleW, scaleH)
+        setScale(monitor, maxW, maxH)
     end
     monitor.clear()
 
@@ -62,13 +67,8 @@ end
 
 local function displayStateNoColour(monitor, state)
     if monitor.setTextScale then
-        local w, h = monitor.getSize()
         local maxW, maxH = #"[F]eathered knife: off", 2
-        local scaleW, scaleH = w/maxW, h/maxH
-        scaleW, scaleH = scaleW*2, scaleH*2
-        scaleW, scaleH = math.floor(scaleW+0.5), math.floor(scaleH+0.5)
-        scaleW, scaleH = scaleW/2, scaleW/2
-        monitor.setTextScale(scaleW, scaleH)
+        setScale(monitor, maxW, maxH)
     end
     monitor.clear()
 
