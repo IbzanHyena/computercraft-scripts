@@ -17,7 +17,7 @@ end
 local function setScale(monitor, maxW, maxH)
     monitor.setTextScale(1)
     local w, h = monitor.getSize()
-    local scaleW, scaleH = maxW/w, maxH/h
+    local scaleW, scaleH = w/maxW, h/maxH
     scaleW, scaleH = scaleW*2, scaleH*2
     scaleW, scaleH = math.floor(scaleW), math.floor(scaleH)
     scaleW, scaleH = scaleW/2, scaleW/2
