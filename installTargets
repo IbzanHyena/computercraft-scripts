@@ -17,4 +17,9 @@
         "apis/altarcontrol",
         "bloodaltar",
     },
+    mobfarm = {
+        "apis/clientserver",
+        "mobfarmlighting/controller",
+        "mobfarmlighting/receiver",
+    }
 }
