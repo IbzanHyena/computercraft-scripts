@@ -68,29 +68,23 @@ function DisplayStateColour(config, monitor, state)
     for k, t in pairs(config) do
         i = i + 1
         local key = keys.getName(t["toggleKey"])
-        local keyShown = false
         monitor.setCursorPos(1, i)
-        for j = 1,#t["displayText"] do
-            local char = string.sub(t["displayText"], j, j)
-            if not keyShown and string.lower(char) == key then
-                monitor.setTextColour(colours.yellow)
-                monitor.write(char)
-                keyShown = true
-                monitor.setTextColour(colours.white)
-            else
-                monitor.write(char)
-            end
-        end
-
-        if not keyShown then
+        local displayIndex = string.find(string.lower(t["displayText"]), key, 1, true)
+        if displayIndex then
+            monitor.write(string.sub(t["displayText"], 1, displayIndex - 1))
+            monitor.setTextColour(colours.yellow)
+            monitor.write(string.sub(t["displayText"], displayIndex, displayIndex))
+            monitor.setTextColour(colours.white)
+            monitor.write(string.sub(t["displayText"], displayIndex + 1))
+        else
+            monitor.write(t["displayText"])
             monitor.write(" [")
             monitor.setTextColour(colours.yellow)
             monitor.write(string.upper(key))
             monitor.setTextColour(colours.white)
-            monitor.write("]: ")
-        else
-            monitor.write(": ")
+            monitor.write("]")
         end
+        monitor.write(": ")
 
         local on = state[k]
         if t["inverted"] then on = not on end
@@ -130,25 +124,23 @@ function DisplayStateNoColour(config, monitor, state)
     for k, t in pairs(config) do
         i = i + 1
         local key = keys.getName(t["toggleKey"])
-        local keyShown = false
-        monitor.setCursorPos(1, i)
-        for j = 1,#t["displayText"] do
-            local char = string.sub(t["displayText"], j, j)
-            if not keyShown and string.lower(char) == key then
-                monitor.write("[" .. char .. "]")
-                keyShown = true
-            else
-                monitor.write(char)
-            end
-        end
-
-        if not keyShown then
-            monitor.write(" [" .. string.upper(key) .. "]: ")
+        local displayIndex = string.find(string.lower(t["displayText"]), key, 1, true)
+        if displayIndex then
+            monitor.write(
+                string.sub(t["displayText"], 1, displayIndex - 1)
+                .. "["
+                .. string.sub(t["displayText"], displayIndex, displayIndex)
+                .. "]"
+                .. string.sub(t["displayText"], displayIndex + 1)
+            )
         else
-            monitor.write(": ")
+            monitor.write(t["displayText"] .. " [" .. string.upper(key) .. "]")
         end
+        monitor.write(": ")
 
-        if state[k] then
+        local on = state[k]
+        if t["inverted"] then on = not on end
+        if on then
             monitor.write("on")
         else
             monitor.write("off")
