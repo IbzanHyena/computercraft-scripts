@@ -61,6 +61,8 @@ function DisplayStateColour(config, monitor, state)
         setScale(monitor, maxW, maxH)
     end
 
+    monitor.clear()
+
     local i = 0
     for k, t in pairs(config) do
         i = i + 1
@@ -120,6 +122,8 @@ function DisplayStateNoColour(config, monitor, state)
         end
         setScale(monitor, maxW, maxH)
     end
+
+    monitor.clear()
 
     local i = 0
     for k, t in pairs(config) do
