@@ -86,9 +86,7 @@ function DisplayStateColour(config, monitor, state)
         end
         monitor.write(": ")
 
-        local on = state[k]
-        if t["inverted"] then on = not on end
-        if on then
+        if state[k] ~= t["inverted"] then
             monitor.setTextColour(colours.green)
             monitor.write("on")
         else
@@ -138,9 +136,7 @@ function DisplayStateNoColour(config, monitor, state)
         end
         monitor.write(": ")
 
-        local on = state[k]
-        if t["inverted"] then on = not on end
-        if on then
+        if state[k] ~= t["inverted"] then
             monitor.write("on")
         else
             monitor.write("off")
