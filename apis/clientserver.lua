@@ -51,7 +51,12 @@ function DisplayStateColour(config, monitor, state)
         local maxH = #config
         local maxW = 0
         for _, t in pairs(config) do
-            maxW = math.max(maxW, #t["displayText"])
+            local maxDisplayLength = #t["displayText"]
+            if not string.find(t["displayText"], keys.getName(t["toggleKey"])) then
+                maxDisplayLength = maxDisplayLength + 4
+            end
+            maxDisplayLength = maxDisplayLength + 5
+            maxW = math.max(maxW, maxDisplayLength)
         end
         setScale(monitor, maxW, maxH)
     end
@@ -104,7 +109,14 @@ function DisplayStateNoColour(config, monitor, state)
         local maxH = #config
         local maxW = 0
         for _, t in pairs(config) do
-            maxW = math.max(maxW, #t["displayText"])
+            local maxDisplayLength = #t["displayText"]
+            if string.find(t["displayText"], keys.getName(t["toggleKey"])) then
+                maxDisplayLength = maxDisplayLength + 2
+            else
+                maxDisplayLength = maxDisplayLength + 4
+            end
+            maxDisplayLength = maxDisplayLength + 5
+            maxW = math.max(maxW, maxDisplayLength)
         end
         setScale(monitor, maxW, maxH)
     end
