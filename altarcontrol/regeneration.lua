@@ -1,5 +1,5 @@
-if not os.loadAPI("/apis/altarcontrol") then
-    print("Failed to load altarcontrol API")
+if not os.loadAPI("/apis/clientserver") then
+    print("Failed to load clientserver API")
 end
 
-altarcontrol.RunReceiver("regeneration")
+clientserver.RunReceiver("altarcontrol", "regeneration", "regeneration")

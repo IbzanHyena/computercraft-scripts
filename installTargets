@@ -14,7 +14,7 @@
         "altarcontrol/controller",
         "altarcontrol/featheredknife",
         "altarcontrol/regeneration",
-        "apis/altarcontrol",
+        "apis/clientserver",
         "bloodaltar",
     },
     mobfarm = {

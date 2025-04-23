@@ -17,11 +17,11 @@ local function writeState(state)
 end
 
 
-function WaitForReceivers(receivers)
+function WaitForReceivers(protocol, receivers)
     while true do
         local allValid = true
-        for _, p in pairs(receivers) do
-            local rx = rednet.lookup(p[0], p[1])
+        for _, hostname in pairs(receivers) do
+            local rx = rednet.lookup(hostname)
             if rx == nil then
                 allValid = false
                 break
@@ -194,7 +194,7 @@ function RunController(config, protocol, defaultState, receivers)
     rednet.host(protocol, "controller")
     local state = readState()
     displayStateAll(state)
-    if receivers then WaitForReceivers(receivers) end
+    if receivers then WaitForReceivers(protocol, receivers) end
     rednet.broadcast(state, protocol)
 
     while true do
