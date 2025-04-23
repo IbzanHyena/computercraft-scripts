@@ -62,7 +62,7 @@ function DisplayStateColour(config, monitor, state)
         local key = keys.getName(t["toggleKey"])
         local keyShown = false
         monitor.setCursorPos(1, i)
-        for j in 1,#t["displayText"] do
+        for j = 1,#t["displayText"] do
             if not keyShown and string.lower(t[j]) == key then
                 monitor.setTextColour(colours.yellow)
                 monitor.write(t[j])
@@ -112,7 +112,7 @@ function DisplayStateNoColour(config, monitor, state)
         local key = keys.getName(t["toggleKey"])
         local keyShown = false
         monitor.setCursorPos(1, i)
-        for j in 1,#t["displayText"] do
+        for j = 1,#t["displayText"] do
             if not keyShown and string.lower(t[j]) == key then
                 monitor.write("[" .. t[j] .. "]")
                 keyShown = true
