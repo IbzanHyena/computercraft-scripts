@@ -7,7 +7,7 @@ clientserver.RunController(
         featheredKnife = {toggleKey = keys.f, displayText = "Feathered knife", inverted = true},
         regeneration = {toggleKey = keys.r, displayText = "Regeneration", inverted = true},
     },
-    "mobfarm",
+    "altarcontrol",
     {featheredKnife=false, regeneration=false},
     {"featheredKnife", "regeneration"}
 )
