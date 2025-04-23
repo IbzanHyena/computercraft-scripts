@@ -229,8 +229,7 @@ function RunReceiver(protocol, key, hostname)
         local _, message = rednet.receive(protocol)
         if message[key] ~= nil then
             for _, side in pairs(redstone.getSides()) do
-                -- redstone on = ritual disabled
-                redstone.setOutput(side, not message[key])
+                redstone.setOutput(side, message[key])
             end
         end
     end
