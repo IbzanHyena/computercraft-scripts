@@ -67,8 +67,8 @@ function DisplayStateColour(config, monitor, state)
     local i = 0
     for k, t in pairs(config) do
         i = i + 1
-        local key = keys.getName(t["toggleKey"])
         monitor.setCursorPos(1, i)
+        local key = keys.getName(t["toggleKey"])
         local displayIndex = string.find(string.lower(t["displayText"]), key, 1, true)
         if displayIndex then
             monitor.write(string.sub(t["displayText"], 1, displayIndex - 1))
@@ -96,6 +96,8 @@ function DisplayStateColour(config, monitor, state)
 
         monitor.setTextColour(colours.white)
     end
+
+    monitor.setCursorPos(1, i + 1)
 end
 
 
@@ -121,6 +123,7 @@ function DisplayStateNoColour(config, monitor, state)
     local i = 0
     for k, t in pairs(config) do
         i = i + 1
+        monitor.setCursorPos(1, i)
         local key = keys.getName(t["toggleKey"])
         local displayIndex = string.find(string.lower(t["displayText"]), key, 1, true)
         if displayIndex then
@@ -142,6 +145,8 @@ function DisplayStateNoColour(config, monitor, state)
             monitor.write("off")
         end
     end
+
+    monitor.setCursorPos(1, i + 1)
 end
 
 
