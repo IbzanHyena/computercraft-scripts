@@ -21,7 +21,7 @@ function WaitForReceivers(protocol, receivers)
     while true do
         local allValid = true
         for _, hostname in pairs(receivers) do
-            local rx = rednet.lookup(hostname)
+            local rx = rednet.lookup(protocol, hostname)
             if rx == nil then
                 allValid = false
                 break
