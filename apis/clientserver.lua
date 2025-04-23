@@ -42,6 +42,7 @@ local function setScale(monitor, maxW, maxH)
     scaleW, scaleH = math.floor(scaleW), math.floor(scaleH)
     scaleW, scaleH = scaleW/2, scaleW/2
     local scale = math.min(scaleW, scaleH)
+    scale = math.min(math.max(scale, 0.5), 5)
     monitor.setTextScale(scale)
 end
 
