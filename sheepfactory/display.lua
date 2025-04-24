@@ -21,6 +21,6 @@ while true do
     for k, v in pairs(message["relative"]) do
         y = y + 1
         monitor.setCursorPos(1, y)
-        monitor.write(string.format("%s: %d/%d (%0.2f)"), k, message["progress"][k], message["quota"][k], v)
+        monitor.write(string.format("%s: %d/%d (%f)"), k, message["progress"][k], message["quota"][k], v)
     end
 end
