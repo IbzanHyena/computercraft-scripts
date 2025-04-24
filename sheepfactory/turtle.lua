@@ -9,7 +9,7 @@ local progress = {}
 
 rednet.open("left")
 rednet.host("sheepfactory", "turtle")
-WaitForReceivers("sheepfactory", {"display", "door"})
+clientserver.WaitForReceivers("sheepfactory", {"display", "door"})
 local displayId = rednet.lookup("sheepfactory", "display")
 local doorId = rednet.lookup("sheepfactory", "door")
 
