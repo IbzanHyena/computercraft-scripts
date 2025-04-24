@@ -15,7 +15,6 @@ rednet.host("sheepfactory", "display")
 
 while true do
     local _, message, _ = rednet.receive("sheepfactory")
-    print(textutils.serialise(message))
     monitor.clear()
     local y = 0
     for k, v in pairs(message["relative"]) do
