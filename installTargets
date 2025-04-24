@@ -21,5 +21,11 @@
         "apis/clientserver",
         "mobfarmlighting/controller",
         "mobfarmlighting/receiver",
-    }
+    },
+    sheepfactory = {
+        "apis/clientserver",
+        "sheepfactory/display",
+        "sheepfactory/door",
+        "sheepfactory/turtle",
+    },
 }

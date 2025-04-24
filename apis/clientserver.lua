@@ -159,6 +159,19 @@ function DisplayState(config, monitor, state)
 end
 
 
+function FindModemSide()
+    local modemSide = nil
+    for _, side in pairs(peripheral.getNames()) do
+        if peripheral.getType(side) == "modem" then
+            modemSide = side
+            break
+        end
+    end
+
+    return modemSide
+end
+
+
 function RunController(config, protocol, defaultState, receivers)
     -- initialise the variables for the server
     if not fs.exists(StateFile) then
@@ -167,13 +180,11 @@ function RunController(config, protocol, defaultState, receivers)
 
     local sides = peripheral.getNames()
     local monitors = {term}
-    local modemSide = nil
+    local modemSide = FindModemSide()
 
     for _, side in pairs(sides) do
         local t = peripheral.getType(side)
-        if modemSide == nil and t == "modem" then
-            modemSide = side
-        elseif t == "monitor" then
+        if t == "monitor" then
             table.insert(monitors, peripheral.wrap(side))
         end
     end
@@ -218,15 +229,7 @@ end
 
 
 function RunReceiver(protocol, key, hostname)
-    local ModemSide = nil
-
-    for _, side in pairs(peripheral.getNames()) do
-        if peripheral.getType(side) == "modem" then
-            ModemSide = side
-            break
-        end
-    end
-
+    local ModemSide = FindModemSide()
     if ModemSide == nil then
         print("Unable to find modem")
         return
