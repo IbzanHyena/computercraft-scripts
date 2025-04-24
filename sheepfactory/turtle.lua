@@ -13,6 +13,7 @@ clientserver.WaitForReceivers("sheepfactory", {"display", "door"})
 local displayId = rednet.lookup("sheepfactory", "display")
 local doorId = rednet.lookup("sheepfactory", "door")
 
+rednet.send(displayId, {quota=quota, progress=progress, relative={}}, "sheepfactory")
 rednet.send(doorId, false, "sheepfactory")
 
 while true do
