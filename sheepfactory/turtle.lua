@@ -34,7 +34,7 @@ while true do
         local relative = {}
         local finished = true
         for k, v in pairs(quota) do
-            relative[k] = math.min(progress[k] / v, 1)
+            relative[k] = math.min((progress[k] or 0) / v, 1)
             finished = finished and relative[k] == 1
         end
         rednet.send(displayId, {quota=quota, progress=progress, relative=relative}, "sheepfactory")
