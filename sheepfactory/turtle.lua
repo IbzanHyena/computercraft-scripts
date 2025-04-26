@@ -13,7 +13,10 @@ local quotaUpdateProbability = 0.5
 
 rednet.open("left")
 rednet.host("sheepfactory", "turtle")
-clientserver.WaitForReceivers("sheepfactory", {"door", "sheepdisplay", "yeendisplay"})
+clientserver.WaitForReceivers(
+    "sheepfactory",
+    {"door", "sheepdisplay", "yeendisplay"}
+)
 local doorId = rednet.lookup("sheepfactory", "door")
 local sheepDisplayId = rednet.lookup("sheepfactory", "sheepdisplay")
 local yeenDisplayId = rednet.lookup("sheepfactory", "yeendisplay")
@@ -44,7 +47,10 @@ end
 
 local function increaseQuota()
     while true do
-        if (os.clock() - lastProgressTime) > quotaUpdateFrequency and (os.clock() - quotaUpdateTime) > quotaUpdateFrequency then
+        if
+            (os.clock() - lastProgressTime) > quotaUpdateFrequency
+            and (os.clock() - quotaUpdateTime) > quotaUpdateFrequency
+        then
             for k, v in pairs(quota) do
                 if
                     (progress[k] or 0) < quota[k]
@@ -69,7 +75,10 @@ local function readItems()
             turtle.drop()
             local aspects = aspectalyzer.getAspectCount()
             for k, v in pairs(aspects) do
-                progress[k] = math.min((progress[k] or 0) + v * count, quota[k] or math.huge)
+                progress[k] = math.min(
+                    (progress[k] or 0) + v * count,
+                    quota[k] or math.huge
+                )
             end
             turtle.suck()
             turtle.dropDown()
