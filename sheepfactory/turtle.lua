@@ -83,7 +83,7 @@ local function main()
 
     local function readItems()
         while true do
-            if turtle.suckUp() then
+            if turtle.suckDown() then
                 local count = turtle.getItemCount()
                 turtle.drop()
                 local aspects = aspectalyzer.getAspectCount()
@@ -94,7 +94,7 @@ local function main()
                     )
                 end
                 turtle.suck()
-                turtle.dropDown()
+                turtle.dropUp()
 
                 lastProgressTime = os.clock()
                 if updateDisplays() then return end
