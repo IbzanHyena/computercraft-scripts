@@ -3,6 +3,8 @@ if not os.loadAPI("/apis/clientserver") then
 end
 
 local monitor = peripheral.find("monitor")
+monitor.setTextScale(0.5)
+local maxW, _ = monitor.getSize()
 local ModemSide = clientserver.FindModemSide()
 
 if ModemSide == nil then
@@ -20,6 +22,19 @@ while true do
     for k, v in pairs(message["quota"]) do
         y = y + 1
         monitor.setCursorPos(1, y)
-        monitor.write(string.format("%s: %d/%d (%f)", (k:gsub("^%l", string.upper)), message["progress"][k] or 0, v, message["relative"][k] or 0))
+        local filledW = math.floor((message["relative"][k] or 0) * maxW)
+        local text = string.format("%s: %d/%d", (k:gsub("^%l", string.upper)), message["progress"][k] or 0, v)
+        local filledSubstring = string.sub(text, 1, filledW)
+        monitor.setTextColour(colours.black)
+        monitor.setBackgroundColour(colours.white)
+        monitor.write(filledSubstring)
+        if filledW > #filledSubstring then
+            monitor.write(string.rep(" ", filledW - #filledSubstring))
+        end
+        monitor.setTextColour(colours.white)
+        monitor.setBackgroundColour(colours.black)
+        if #filledSubstring < #text then
+            monitor.write(string.sub(text, #filledSubstring + 1))
+        end
     end
 end
