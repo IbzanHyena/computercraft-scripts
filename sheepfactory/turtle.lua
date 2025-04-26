@@ -108,6 +108,7 @@ local function main()
     updateDisplays()
     parallel.waitForAny(increaseQuota, readItems)
     rednet.send(doorId, true, sheepfactory.Protocol)
+    rednet.send(yeenDisplayId, true, sheepfactory.Protocol)
 end
 
 
