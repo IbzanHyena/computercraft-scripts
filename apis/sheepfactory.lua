@@ -1,4 +1,4 @@
-local function reinstall(startup)
+function Reinstall(startup)
     shell.run("/install")
     fs.delete("/startup")
     fs.copy(startup, "/startup")
@@ -6,7 +6,7 @@ local function reinstall(startup)
 end
 
 
-local function waitForUpdate(startup)
+function WaitForUpdate(startup)
     local _, message, _ = rednet.receive("sheepfactoryupdates")
-    if message then reinstall(startup) end
+    if message then Reinstall(startup) end
 end

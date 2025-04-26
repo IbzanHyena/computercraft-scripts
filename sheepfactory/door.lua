@@ -30,4 +30,4 @@ local function main()
 end
 
 
-sheepfactory.waitForUpdate(main, function () sheepfactory.waitForUpdate("door") end)
+parallel.waitForAny(main, function () sheepfactory.WaitForUpdate("door") end)
