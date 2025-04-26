@@ -31,9 +31,9 @@ while true do
             monitor.setTextColour(colours.white)
             monitor.setBackgroundColour(colours.black)
             monitor.write(string.format("%s: %d/???", displayAspect, progress))
-        else
             monitor.setTextColour(colours.black)
             monitor.setBackgroundColour(colours.white)
+        else
             local text = string.format("%s: %d/%d", displayAspect, progress, v)
             monitor.write(text)
             monitor.write(string.rep(" ", maxW - #text))
