@@ -17,9 +17,9 @@ while true do
     local _, message, _ = rednet.receive("sheepfactory")
     monitor.clear()
     local y = 0
-    for k, v in pairs(message["relative"]) do
+    for k, v in pairs(message["quota"]) do
         y = y + 1
         monitor.setCursorPos(1, y)
-        monitor.write(string.format("%s: %d/%d (%f)", (k:gsub("^%l", string.upper)), message["progress"][k] or 0, message["quota"][k], v))
+        monitor.write(string.format("%s: %d/%d (%f)", (k:gsub("^%l", string.upper)), message["progress"][k] or 0, v, message["relative"][k] or 0))
     end
 end
