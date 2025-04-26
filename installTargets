@@ -3,6 +3,9 @@
         "install",
         "wget",
     },
+    utils = {
+        "eyeintersect",
+    },
     turtle = {
         "apis/extraTurtle",
         "farm",
