@@ -23,7 +23,7 @@ while true do
             shell.run("/sheepfactory/yeendisplay")
         elseif key == keys.u then
             rednet.broadcast("sheepfactoryupdates", true)
-            sheepfactory.reinstall("/sheepfactory/controller")
+            sheepfactory.Reinstall("/sheepfactory/controller")
         end
     end
 end
