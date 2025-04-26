@@ -29,7 +29,7 @@ function WaitForReceivers(protocol, receivers)
         end
 
         if allValid then return end
-        sleep(1)
+        sleep(0.1)
     end
 end
 

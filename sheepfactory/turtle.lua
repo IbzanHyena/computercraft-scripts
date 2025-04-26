@@ -99,7 +99,7 @@ local function main()
                 lastProgressTime = os.clock()
                 if updateDisplays() then return end
             else
-                sleep(1)
+                sleep(0.1)
             end
         end
     end
