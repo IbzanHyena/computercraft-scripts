@@ -1,5 +1,5 @@
 function Reinstall(startup)
-    shell.run("/install")
+    os.run({}, "/install")
     fs.delete("/startup")
     fs.copy(startup, "/startup")
     os.reboot()
