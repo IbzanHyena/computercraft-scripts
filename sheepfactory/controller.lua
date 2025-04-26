@@ -21,6 +21,7 @@ while true do
         if key == keys.s then
             rednet.broadcast(true, sheepfactory.StartProtocol)
             os.run({}, "/sheepfactory/yeendisplay")
+            break
         elseif key == keys.u then
             rednet.broadcast(true, sheepfactory.UpdateProtocol)
             sheepfactory.Reinstall("/sheepfactory/controller")
