@@ -14,19 +14,19 @@ local quotaUpdateProbability = 0.5
 
 local aspectalyzer = peripheral.wrap("front")
 rednet.open("left")
-rednet.host("sheepfactory", "turtle")
-rednet.host("sheepfactorystart", "turtle")
-rednet.host("sheepfactoryupdates", "turtle")
+rednet.host(sheepfactory.Protocl, "turtle")
+rednet.host(sheepfactory.StartProtocl, "turtle")
+rednet.host(sheepfactory.UpdateProtocl, "turtle")
 
 
 local function main()
     clientserver.WaitForReceivers(
-        "sheepfactory",
+        sheepfactory.Protocl,
         {"door", "sheepdisplay", "yeendisplay"}
     )
-    local doorId = rednet.lookup("sheepfactory", "door")
-    local sheepDisplayId = rednet.lookup("sheepfactory", "sheepdisplay")
-    local yeenDisplayId = rednet.lookup("sheepfactory", "yeendisplay")
+    local doorId = rednet.lookup(sheepfactory.Protocl, "door")
+    local sheepDisplayId = rednet.lookup(sheepfactory.Protocl, "sheepdisplay")
+    local yeenDisplayId = rednet.lookup(sheepfactory.Protocl, "yeendisplay")
 
     local quota = {}
 
@@ -52,8 +52,8 @@ local function main()
     local function updateDisplays()
         local relative, finished = calculateRelativeProgress()
         local data = {quota=quota, progress=progress, relative=relative}
-        rednet.send(sheepDisplayId, data, "sheepfactory")
-        rednet.send(yeenDisplayId, data, "sheepfactory")
+        rednet.send(sheepDisplayId, data, sheepfactory.Protocl)
+        rednet.send(yeenDisplayId, data, sheepfactory.Protocl)
         return finished
     end
 
@@ -104,15 +104,15 @@ local function main()
         end
     end
 
-    rednet.send(doorId, false, "sheepfactory")
+    rednet.send(doorId, false, sheepfactory.Protocl)
     updateDisplays()
     parallel.waitForAny(increaseQuota, readItems)
-    rednet.send(doorId, true, "sheepfactory")
+    rednet.send(doorId, true, sheepfactory.Protocl)
 end
 
 
 local function waitForStart()
-    local _, message, _ = rednet.receive("sheepfactorystart")
+    local _, message, _ = rednet.receive(sheepfactory.StartProtocl)
     if message then main() end
 end
 

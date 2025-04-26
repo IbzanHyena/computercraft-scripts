@@ -17,12 +17,12 @@ if ModemSide == nil then
 end
 
 rednet.open(ModemSide)
-rednet.host("sheepfactory", "sheepdisplay")
-rednet.host("sheepfactoryupdates", "sheepdisplay")
+rednet.host(sheepfactory.Protocl, "sheepdisplay")
+rednet.host(sheepfactory.UpdateProtocl, "sheepdisplay")
 
 local function main()
     while true do
-        local _, message, _ = rednet.receive("sheepfactory")
+        local _, message, _ = rednet.receive(sheepfactory.Protocl)
         monitor.clear()
         if message["message"] ~= nil then
             monitor.setCursorPos(1, 1)
@@ -50,4 +50,4 @@ local function main()
 end
 
 
-parallel.waitForAny(main, function() sheepfactory.WaitForUpdate("sheepdisplay") end)
+parallel.waitForAny(main, function() sheepfactory.WaitForUpdate("/sheepfactory/sheepdisplay") end)

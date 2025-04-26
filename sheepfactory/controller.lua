@@ -7,8 +7,8 @@ end
 
 local ModemSide = clientserver.FindModemSide()
 rednet.open(ModemSide)
-rednet.host("sheepfactoryupdates", "controller")
-rednet.host("sheepfactorystart", "controller")
+rednet.host(sheepfactory.UpdateProtocol, "controller")
+rednet.host(sheepfactory.StartProtocol, "controller")
 
 while true do
     term.clear()
@@ -19,10 +19,10 @@ while true do
     while true do
         local _, key, _ = os.pullEvent("key")
         if key == keys.s then
-            rednet.broadcast("sheepfactorystart", true)
+            rednet.broadcast(sheepfactory.StartProtocol, true)
             shell.run("/sheepfactory/yeendisplay")
         elseif key == keys.u then
-            rednet.broadcast("sheepfactoryupdates", true)
+            rednet.broadcast(sheepfactory.UpdateProtocol, true)
             sheepfactory.Reinstall("/sheepfactory/controller")
         end
     end
