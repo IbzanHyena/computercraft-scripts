@@ -117,4 +117,4 @@ local function waitForStart()
 end
 
 
-parallel.waitForAny(waitForStart, function () sheepfactory.WaitForUpdate("turtle") end)
+parallel.waitForAny(waitForStart, function () sheepfactory.WaitForUpdate("/sheepfactory/turtle") end)

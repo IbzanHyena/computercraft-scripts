@@ -48,4 +48,4 @@ local function main()
 end
 
 
-parallel.waitForAny(main, function () sheepfactory.WaitForUpdate("yeendisplay") end)
+parallel.waitForAny(main, function () sheepfactory.WaitForUpdate("/sheepfactory/yeendisplay") end)
