@@ -44,7 +44,7 @@ end
 
 local function increaseQuota()
     while true do
-        if lastProgressTime > 5 then
+        if (os.clock() - lastProgressTime) > 5 and (os.clock() - quotaUpdateTime) > 5 then
             for k, v in pairs(quota) do
                 quota[k] = v + 1
             end
