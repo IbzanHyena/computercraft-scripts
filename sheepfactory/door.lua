@@ -1,4 +1,4 @@
-print("SheepFactory: door")
+print("Sheep Factory: door")
 
 if not os.loadAPI("/apis/clientserver") then
     print("Failed to load clientserver API")
