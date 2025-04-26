@@ -27,6 +27,9 @@
         "textutils",
         "turtle",
         "vector",
-        "window"
+        "window",
+        "clientserver",
+        "extraTurtle",
+        "sheepfactory",
     ]
 }
