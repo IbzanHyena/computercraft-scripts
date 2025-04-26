@@ -20,7 +20,7 @@ while true do
         local _, key, _ = os.pullEvent("key")
         if key == keys.s then
             rednet.broadcast(true, sheepfactory.StartProtocol)
-            shell.run("/sheepfactory/yeendisplay")
+            os.run({}, "/sheepfactory/yeendisplay")
         elseif key == keys.u then
             rednet.broadcast(true, sheepfactory.UpdateProtocol)
             sheepfactory.Reinstall("/sheepfactory/controller")
