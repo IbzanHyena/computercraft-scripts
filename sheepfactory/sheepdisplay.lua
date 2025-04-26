@@ -4,6 +4,7 @@ end
 
 local monitor = peripheral.find("monitor")
 monitor.setTextScale(0.5)
+local maxW, _ = monitor.getSize()
 local ModemSide = clientserver.FindModemSide()
 
 if ModemSide == nil then
@@ -28,9 +29,15 @@ while true do
         local displayAspect = (k:gsub("^%l", string.upper))
         local progress = message["progress"][k] or 0
         if progress < v then
+            monitor.setTextColour(colours.white)
+            monitor.setBackgroundColour(colours.black)
             monitor.write(string.format("%s: %d/???", displayAspect, progress))
         else
-            monitor.write(string.format("%s: %d/%d", displayAspect, progress, v))
+            monitor.setTextColour(colours.black)
+            monitor.setBackgroundColour(colours.white)
+            local text = string.format("%s: %d/%d", displayAspect, progress, v)
+            monitor.write(text)
+            monitor.write(string.rep(" ", maxW - #text))
         end
     end
 end
