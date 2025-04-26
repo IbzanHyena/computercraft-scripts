@@ -3,6 +3,7 @@ if not os.loadAPI("/apis/clientserver") then
 end
 
 local monitor = peripheral.find("monitor")
+monitor.setTextScale(0.5)
 local ModemSide = clientserver.FindModemSide()
 
 if ModemSide == nil then
