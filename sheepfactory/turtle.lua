@@ -14,19 +14,19 @@ local quotaUpdateProbability = 0.5
 
 local aspectalyzer = peripheral.wrap("front")
 rednet.open("left")
-rednet.host(sheepfactory.Protocl, "turtle")
-rednet.host(sheepfactory.StartProtocl, "turtle")
-rednet.host(sheepfactory.UpdateProtocl, "turtle")
+rednet.host(sheepfactory.Protocol, "turtle")
+rednet.host(sheepfactory.StartProtocol, "turtle")
+rednet.host(sheepfactory.UpdateProtocol, "turtle")
 
 
 local function main()
     clientserver.WaitForReceivers(
-        sheepfactory.Protocl,
+        sheepfactory.Protocol,
         {"door", "sheepdisplay", "yeendisplay"}
     )
-    local doorId = rednet.lookup(sheepfactory.Protocl, "door")
-    local sheepDisplayId = rednet.lookup(sheepfactory.Protocl, "sheepdisplay")
-    local yeenDisplayId = rednet.lookup(sheepfactory.Protocl, "yeendisplay")
+    local doorId = rednet.lookup(sheepfactory.Protocol, "door")
+    local sheepDisplayId = rednet.lookup(sheepfactory.Protocol, "sheepdisplay")
+    local yeenDisplayId = rednet.lookup(sheepfactory.Protocol, "yeendisplay")
 
     local quota = {}
 
@@ -52,8 +52,8 @@ local function main()
     local function updateDisplays()
         local relative, finished = calculateRelativeProgress()
         local data = {quota=quota, progress=progress, relative=relative}
-        rednet.send(sheepDisplayId, data, sheepfactory.Protocl)
-        rednet.send(yeenDisplayId, data, sheepfactory.Protocl)
+        rednet.send(sheepDisplayId, data, sheepfactory.Protocol)
+        rednet.send(yeenDisplayId, data, sheepfactory.Protocol)
         return finished
     end
 
@@ -104,15 +104,15 @@ local function main()
         end
     end
 
-    rednet.send(doorId, false, sheepfactory.Protocl)
+    rednet.send(doorId, false, sheepfactory.Protocol)
     updateDisplays()
     parallel.waitForAny(increaseQuota, readItems)
-    rednet.send(doorId, true, sheepfactory.Protocl)
+    rednet.send(doorId, true, sheepfactory.Protocol)
 end
 
 
 local function waitForStart()
-    local _, message, _ = rednet.receive(sheepfactory.StartProtocl)
+    local _, message, _ = rednet.receive(sheepfactory.StartProtocol)
     if message then main() end
 end
 

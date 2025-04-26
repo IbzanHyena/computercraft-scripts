@@ -18,12 +18,12 @@ if ModemSide == nil then
 end
 
 rednet.open(ModemSide)
-rednet.host(sheepfactory.Protocl, "yeendisplay")
-rednet.host(sheepfactory.UpdateProtocl, "yeendisplay")
+rednet.host(sheepfactory.Protocol, "yeendisplay")
+rednet.host(sheepfactory.UpdateProtocol, "yeendisplay")
 
 local function main()
     while true do
-        local _, message, _ = rednet.receive(sheepfactory.Protocl)
+        local _, message, _ = rednet.receive(sheepfactory.Protocol)
         monitor.clear()
         local y = 0
         for k, v in pairs(message["quota"]) do

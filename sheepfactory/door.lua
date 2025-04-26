@@ -15,12 +15,12 @@ if ModemSide == nil then
 end
 
 rednet.open(ModemSide)
-rednet.host(sheepfactory.Protocl, "door")
+rednet.host(sheepfactory.Protocol, "door")
 rednet.host(sheepfactory.UpdateProtocol, "door")
 
 local function main()
     while true do
-        local _, message, _ = rednet.receive(sheepfactory.Protocl)
+        local _, message, _ = rednet.receive(sheepfactory.Protocol)
         if type(message) == "boolean" then
             for _, side in pairs(redstone.getSides()) do
                 redstone.setOutput(side, message)

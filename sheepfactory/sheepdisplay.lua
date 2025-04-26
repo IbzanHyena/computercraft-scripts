@@ -17,12 +17,12 @@ if ModemSide == nil then
 end
 
 rednet.open(ModemSide)
-rednet.host(sheepfactory.Protocl, "sheepdisplay")
-rednet.host(sheepfactory.UpdateProtocl, "sheepdisplay")
+rednet.host(sheepfactory.Protocol, "sheepdisplay")
+rednet.host(sheepfactory.UpdateProtocol, "sheepdisplay")
 
 local function main()
     while true do
-        local _, message, _ = rednet.receive(sheepfactory.Protocl)
+        local _, message, _ = rednet.receive(sheepfactory.Protocol)
         monitor.clear()
         if message["message"] ~= nil then
             monitor.setCursorPos(1, 1)
