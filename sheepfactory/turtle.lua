@@ -24,11 +24,7 @@ while true do
         turtle.drop()
         local aspects = aspectalyzer.getAspectCount()
         for k, v in pairs(aspects) do
-            if not progress[k] then
-                progress[k] = v
-            else
-                progress[k] = progress[k] + v * count
-            end
+            progress[k] = (progress[k] or 0) + v * count
         end
         turtle.suck()
         turtle.dropDown()
