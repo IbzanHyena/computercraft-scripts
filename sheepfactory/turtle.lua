@@ -66,7 +66,7 @@ local function readItems()
             turtle.drop()
             local aspects = aspectalyzer.getAspectCount()
             for k, v in pairs(aspects) do
-                progress[k] = (progress[k] or 0) + v * count
+                progress[k] = math.min((progress[k] or 0) + v * count, quota[k] or math.huge)
             end
             turtle.suck()
             turtle.dropDown()
