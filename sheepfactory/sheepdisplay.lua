@@ -20,6 +20,10 @@ rednet.open(ModemSide)
 rednet.host(sheepfactory.Protocol, "sheepdisplay")
 rednet.host(sheepfactory.UpdateProtocol, "sheepdisplay")
 
+monitor.setTextColour(colours.white)
+monitor.setBackgroundColour(colours.black)
+monitor.clear()
+
 local function main()
     while true do
         local _, message, _ = rednet.receive(sheepfactory.Protocol)
