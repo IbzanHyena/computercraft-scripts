@@ -22,9 +22,15 @@ while true do
         monitor.write(message["message"])
     end
     local y = 0
-    for k, _ in pairs(message["quota"]) do
+    for k, v in pairs(message["quota"]) do
         y = y + 1
         monitor.setCursorPos(1, y)
-        monitor.write(string.format("%s: %d/???", (k:gsub("^%l", string.upper)), message["progress"][k] or 0))
+        local displayAspect = (k:gsub("^%l", string.upper))
+        local progress = message["progress"][k] or 0
+        if progress < v then
+            monitor.write(string.format("%s: %d/???", displayAspect, progress))
+        else
+            monitor.write(string.format("%s: %d/%d", displayAspect, progress, v))
+        end
     end
 end
