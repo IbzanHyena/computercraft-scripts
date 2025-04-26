@@ -46,7 +46,10 @@ local function increaseQuota()
     while true do
         if (os.clock() - lastProgressTime) > quotaUpdateFrequency and (os.clock() - quotaUpdateTime) > quotaUpdateFrequency then
             for k, v in pairs(quota) do
-                if math.random() < quotaUpdateProbability then
+                if
+                    (progress[k] or 0) < quota[k]
+                    and math.random() < quotaUpdateProbability
+                then
                     quota[k] = v + quotaUpdateAmount
                 end
             end
