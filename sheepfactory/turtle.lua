@@ -1,6 +1,9 @@
 if not os.loadAPI("/apis/clientserver") then
     print("Failed to load clientserver API")
 end
+if not os.loadAPI("/apis/sheepfactory") then
+    print("Failed to load sheepfactory API")
+end
 
 local quotaAspects = {"corpus", "humanus", "terra", "vinculum"}
 local quotaUpdateFrequency = 30
@@ -10,16 +13,19 @@ local quotaUpdateProbability = 0.5
 local aspectalyzer = peripheral.wrap("front")
 rednet.open("left")
 rednet.host("sheepfactory", "turtle")
-clientserver.WaitForReceivers(
-    "sheepfactory",
-    {"door", "sheepdisplay", "yeendisplay"}
-)
-local doorId = rednet.lookup("sheepfactory", "door")
-local sheepDisplayId = rednet.lookup("sheepfactory", "sheepdisplay")
-local yeenDisplayId = rednet.lookup("sheepfactory", "yeendisplay")
+rednet.host("sheepfactorystart", "turtle")
+rednet.host("sheepfactoryupdates", "turtle")
 
 
 local function main()
+    clientserver.WaitForReceivers(
+        "sheepfactory",
+        {"door", "sheepdisplay", "yeendisplay"}
+    )
+    local doorId = rednet.lookup("sheepfactory", "door")
+    local sheepDisplayId = rednet.lookup("sheepfactory", "sheepdisplay")
+    local yeenDisplayId = rednet.lookup("sheepfactory", "yeendisplay")
+
     local quota = {}
 
     for _, v in ipairs(quotaAspects) do
@@ -102,12 +108,11 @@ local function main()
     rednet.send(doorId, true, "sheepfactory")
 end
 
-while true do
-    local signalReceived = false
-    for _, v in ipairs(redstone.getSides()) do
-        signalReceived = redstone.getInput(v)
-        if signalReceived then break end
-    end
 
-    if signalReceived then main() else sleep(0.1) end
+local function waitForStart()
+    local _, message, _ = rednet.receive("sheepfactorystart")
+    if message then main() end
 end
+
+
+parallel.waitForAny(waitForStart, function () sheepfactory.waitForUpdate("turtle") end)
