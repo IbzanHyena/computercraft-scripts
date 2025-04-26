@@ -8,7 +8,6 @@ if not os.loadAPI("/apis/sheepfactory") then
 end
 
 local monitor = peripheral.find("monitor")
-monitor.setTextScale(0.5)
 local maxW, _ = monitor.getSize()
 local ModemSide = clientserver.FindModemSide()
 
