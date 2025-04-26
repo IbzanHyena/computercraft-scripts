@@ -17,14 +17,16 @@ if ModemSide == nil then
 end
 
 rednet.open(ModemSide)
-rednet.host(sheepfactory.Protocol, "sheepdisplay")
 rednet.host(sheepfactory.UpdateProtocol, "sheepdisplay")
 
 monitor.setTextColour(colours.white)
 monitor.setBackgroundColour(colours.black)
 monitor.clear()
 
+
 local function main()
+    rednet.host(sheepfactory.Protocol, "sheepdisplay")
+
     while true do
         local _, message, _ = rednet.receive(sheepfactory.Protocol)
         monitor.setTextColour(colours.white)
@@ -55,6 +57,8 @@ local function main()
             end
         end
     end
+
+    rednet.unhost(sheepfactory.Protocol, "sheepdisplay")
 end
 
 

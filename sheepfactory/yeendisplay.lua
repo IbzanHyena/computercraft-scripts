@@ -17,14 +17,16 @@ if ModemSide == nil then
 end
 
 rednet.open(ModemSide)
-rednet.host(sheepfactory.Protocol, "yeendisplay")
 rednet.host(sheepfactory.UpdateProtocol, "yeendisplay")
 
 monitor.setTextColour(colours.white)
 monitor.setBackgroundColour(colours.black)
 monitor.clear()
 
+
 local function main()
+    rednet.host(sheepfactory.Protocol, "yeendisplay")
+
     while true do
         local _, message, _ = rednet.receive(sheepfactory.Protocol)
         if type(message) == "boolean" and message then break end
@@ -51,6 +53,8 @@ local function main()
             end
         end
     end
+
+    rednet.unhost(sheepfactory.Protocol, "yeendisplay")
 end
 
 
