@@ -7,6 +7,10 @@ local aspectalyzer = peripheral.wrap("front")
 local quota = {terra=10}
 local progress = {}
 
+local quotaUpdateFrequency = 30
+local quotaUpdateAmount = 5
+local quotaUpdateProbability = 0.5
+
 rednet.open("left")
 rednet.host("sheepfactory", "turtle")
 clientserver.WaitForReceivers("sheepfactory", {"door", "sheepdisplay", "yeendisplay"})
@@ -40,9 +44,11 @@ end
 
 local function increaseQuota()
     while true do
-        if (os.clock() - lastProgressTime) > 5 and (os.clock() - quotaUpdateTime) > 5 then
+        if (os.clock() - lastProgressTime) > quotaUpdateFrequency and (os.clock() - quotaUpdateTime) > quotaUpdateFrequency then
             for k, v in pairs(quota) do
-                quota[k] = v + 1
+                if math.random() < quotaUpdateProbability then
+                    quota[k] = v + quotaUpdateAmount
+                end
             end
             quotaUpdateTime = os.clock()
             if updateDisplays() then return end
