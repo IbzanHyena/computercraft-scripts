@@ -24,6 +24,8 @@
     },
     sheepfactory = {
         "apis/clientserver",
+        "apis/sheepfactory",
+        "sheepfactory/controller",
         "sheepfactory/door",
         "sheepfactory/sheepdisplay",
         "sheepfactory/turtle",
