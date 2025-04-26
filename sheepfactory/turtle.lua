@@ -14,10 +14,6 @@ local doorId = rednet.lookup("sheepfactory", "door")
 local sheepDisplayId = rednet.lookup("sheepfactory", "sheepdisplay")
 local yeenDisplayId = rednet.lookup("sheepfactory", "yeendisplay")
 
-rednet.send(doorId, false, "sheepfactory")
-rednet.send(sheepDisplayId, {quota=quota, progress=progress, relative={}}, "sheepfactory")
-rednet.send(yeenDisplayId, {quota=quota, progress=progress, relative={}}, "sheepfactory")
-
 local quotaUpdateTime = os.clock()
 local lastProgressTime = os.clock()
 
@@ -77,5 +73,7 @@ local function readItems()
     end
 end
 
+rednet.send(doorId, false, "sheepfactory")
+updateDisplays()
 parallel.waitForAny(increaseQuota, readItems)
 rednet.send(doorId, true, "sheepfactory")
