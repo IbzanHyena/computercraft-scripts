@@ -3,6 +3,8 @@ UpdateProtocol = "sheepfactoryupdates"
 StartProtocol = "sheepfactorystart"
 
 function Reinstall(startup)
+    fs.delete("/apis")
+    fs.delete("/sheepfactory")
     os.run({}, "/install")
     fs.delete("/startup")
     fs.copy(startup, "/startup")
