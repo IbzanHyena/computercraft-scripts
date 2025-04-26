@@ -113,8 +113,10 @@ end
 
 
 local function waitForStart()
-    local _, message, _ = rednet.receive(sheepfactory.StartProtocol)
-    if message then main() end
+    while true do
+        local _, message, _ = rednet.receive(sheepfactory.StartProtocol)
+        if message then main() end
+    end
 end
 
 
