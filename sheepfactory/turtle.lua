@@ -4,7 +4,13 @@ end
 
 local aspectalyzer = peripheral.wrap("front")
 
-local quota = {terra=10}
+local quotaAspects = {"corpus", "humanus", "terra", "vinculum"}
+local quota = {}
+
+for _, v in ipairs(quotaAspects) do
+    quota[v] = math.random(8, 32)
+end
+
 local progress = {}
 
 local quotaUpdateFrequency = 30
