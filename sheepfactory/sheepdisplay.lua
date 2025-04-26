@@ -23,6 +23,8 @@ rednet.host(sheepfactory.UpdateProtocol, "sheepdisplay")
 local function main()
     while true do
         local _, message, _ = rednet.receive(sheepfactory.Protocol)
+        monitor.setTextColour(colours.white)
+        monitor.setBackgroundColour(colours.black)
         monitor.clear()
         if message["message"] ~= nil then
             monitor.setCursorPos(1, 1)
