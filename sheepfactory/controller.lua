@@ -1,6 +1,9 @@
 if not os.loadAPI("/apis/clientserver") then
     print("Failed to load clientserver API")
 end
+if not os.loadAPI("/apis/sheepfactory") then
+    print("Failed to load sheepfactory API")
+end
 
 local ModemSide = clientserver.FindModemSide()
 rednet.open(ModemSide)
@@ -20,6 +23,7 @@ while true do
             shell.run("/sheepfactory/yeendisplay")
         elseif key == keys.u then
             rednet.broadcast("sheepfactoryupdates", true)
+            sheepfactory.reinstall("/sheepfactory/controller")
         end
     end
 end
