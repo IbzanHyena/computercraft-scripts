@@ -11,7 +11,7 @@ if ModemSide == nil then
 end
 
 rednet.open(ModemSide)
-rednet.host("sheepfactory", "display")
+rednet.host("sheepfactory", "yeendisplay")
 
 while true do
     local _, message, _ = rednet.receive("sheepfactory")
@@ -20,6 +20,6 @@ while true do
     for k, v in pairs(message["relative"]) do
         y = y + 1
         monitor.setCursorPos(1, y)
-        monitor.write(string.format("%s: %d/%d (%f)", k, message["progress"][k] or 0, message["quota"][k], v or 0))
+        monitor.write(string.format("%s: %d/%d (%f)", (k:gsub("^%l", string.upper)), message["progress"][k] or 0, message["quota"][k], v))
     end
 end

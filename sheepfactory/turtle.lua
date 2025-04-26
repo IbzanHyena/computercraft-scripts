@@ -9,12 +9,14 @@ local progress = {}
 
 rednet.open("left")
 rednet.host("sheepfactory", "turtle")
-clientserver.WaitForReceivers("sheepfactory", {"display", "door"})
-local displayId = rednet.lookup("sheepfactory", "display")
+clientserver.WaitForReceivers("sheepfactory", {"door", "sheepdisplay", "yeendisplay"})
 local doorId = rednet.lookup("sheepfactory", "door")
+local sheepDisplayId = rednet.lookup("sheepfactory", "sheepdisplay")
+local yeenDisplayId = rednet.lookup("sheepfactory", "yeendisplay")
 
-rednet.send(displayId, {quota=quota, progress=progress, relative={}}, "sheepfactory")
 rednet.send(doorId, false, "sheepfactory")
+rednet.send(sheepDisplayId, {quota=quota, progress=progress, relative={}}, "sheepfactory")
+rednet.send(yeenDisplayId, {quota=quota, progress=progress, relative={}}, "sheepfactory")
 
 while true do
     if turtle.suckUp() then
@@ -37,7 +39,9 @@ while true do
             relative[k] = math.min((progress[k] or 0) / v, 1)
             finished = finished and relative[k] == 1
         end
-        rednet.send(displayId, {quota=quota, progress=progress, relative=relative}, "sheepfactory")
+        local data = {quota=quota, progress=progress, relative=relative}
+        rednet.send(sheepDisplayId, data, "sheepfactory")
+        rednet.send(yeenDisplayId, data, "sheepfactory")
         if finished then break end
     else
         sleep(1)
