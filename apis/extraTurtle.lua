@@ -11,11 +11,12 @@ function refuelToMin(amount, predicate)
                 turtle.getItemCount(n) > 0
                 and (predicate == nil or predicate(turtle.getItemDetail(n)))
             then
-                while needed > 0 and turtle.getItemCount(n) > 0 do
-                    turtle.select(n)
-                    turtle.refuel(1)
-                    needed = amount - turtle.getFuelLevel()
-                end
+                local before = turtle.getFuelLevel()
+                turtle.refuel(1)
+                local after = turtle.getFuelLevel()
+                local delta = after - before
+                turtle.refuel(math.floor(needed / delta))
+                needed = amount - turtle.getFuelLevel()
             end
         end
     end
