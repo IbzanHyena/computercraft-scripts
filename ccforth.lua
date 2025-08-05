@@ -2,13 +2,14 @@ local argv = { ... }
 
 PROGRAM_STACK = {}
 
+local stdin = io.input()
 VARIABLES = {
     _compilation_depth = 0,
     _current_word = nil,
     _current_definition = nil,
     _current_definitions = {},
     _current_dictionary = nil,
-    _current_source = io.stdin,
+    _current_source = stdin,
     _execution_stack = {},
     _word_buffer = nil,
     _dictionaries = {},
@@ -50,12 +51,12 @@ local function fill_word_buffer(print_stack)
         io.write("Program stack:\n" .. dump(PROGRAM_STACK) .. "\n")
         io.flush()
     end
-    if VARIABLES["_current_source"] == io.stdin then
+    if VARIABLES["_current_source"] == stdin then
         io.write("ccforth> ")
         io.flush()
     end
 
-    VARIABLES["_word_buffer"] = VARIABLES["_current_source"]:read("l")
+    VARIABLES["_word_buffer"] = VARIABLES["_current_source"]:read("*l")
     if VARIABLES["_word_buffer"] then
         VARIABLES["_word_buffer"] = VARIABLES["_word_buffer"] .. "\n"
     end
@@ -811,7 +812,7 @@ for _, fname in ipairs(argv) do
 end
 
 VARIABLES["_current_dictionary"] = VARIABLES["_dictionaries"]["USER"]
-VARIABLES["_current_source"] = io.stdin
+VARIABLES["_current_source"] = stdin
 
 local function repl()
    while true do
