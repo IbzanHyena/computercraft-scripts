@@ -9,7 +9,7 @@ NB. vanilla turtle bindings
 : turtle.forward 0 " turtle" " forward" luacall ;
 : turtle.back 0 " turtle" " back" luacall ;
 : turtle.up 0 " turtle" " up" luacall ;
-: turtle.down 0 " turtle" " down" luacall;
+: turtle.down 0 " turtle" " down" luacall ;
 : turtle.turnLeft 0 " turtle" " turnLeft" luacall ;
 : turtle.turnRight 0 " turtle" " turnRight" luacall ;
 : turtle.select 1 " turtle" " select" luacall ;
