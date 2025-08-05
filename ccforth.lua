@@ -797,7 +797,7 @@ for _, fname in ipairs(argv) do
     VARIABLES["_current_dictionary"] = VARIABLES["_dictionaries"]["USER"]
     local file, err = io.open(fname, "r")
     if not file then
-        ferror("Could not open file: " .. fname .. " - " .. err)
+        ferror("Could not open file: " .. fname .. " - " .. tostring(err))
     end
     VARIABLES["_current_source"] = file
 
