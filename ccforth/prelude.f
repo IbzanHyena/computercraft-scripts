@@ -77,3 +77,9 @@ NB. three values:
 NB. logic
 : both? bi@ and ;
 : either? bi@ or ;
+
+NB. system stuff
+: sleep 1 " os" " sleep" luacall ;
+: exit 1 " os" " exit" luacall ;
+: quit 0 exit ;
+: abort 1 exit ;

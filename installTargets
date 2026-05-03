@@ -3,6 +3,9 @@
         "install",
         "wget",
     },
+    forth = {
+        "ccforth2",
+    }
     utils = {
         "eyeintersect",
     },
