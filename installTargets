@@ -5,7 +5,7 @@
     },
     forth = {
         "ccforth2",
-    }
+    },
     utils = {
         "eyeintersect",
     },
