@@ -110,6 +110,8 @@ local function detect_tail_calls(b)
     end
 end
 
+local push
+
 local function run()
     while true do
         local insn = body[ip]
@@ -126,7 +128,7 @@ local function run()
             ip = ip + 1
             local op = insn.op
             if op == OP_LIT then
-                PSTACK[#PSTACK + 1] = insn.value
+                push(insn.value)
             elseif op == OP_CALL then
                 local entry = VOCAB[insn.target]
                 if entry.kind == "prim" then
@@ -221,6 +223,10 @@ local function pop1()
     return table.remove(PSTACK)
 end
 
+push = function(v)
+    PSTACK[#PSTACK + 1] = v
+end
+
 -- compile-time / parser words
 
 add_prim(
@@ -300,7 +306,7 @@ add_prim(
             emit({ op = OP_LIT, value = frame.entry })
         else
             current_def = nil
-            PSTACK[#PSTACK + 1] = frame.entry
+            push(frame.entry)
         end
     end,
     true
@@ -335,7 +341,7 @@ add_prim(
         VOCAB[#VOCAB + 1] = {
             name = name,
             kind = "prim",
-            fn = function() PSTACK[#PSTACK + 1] = { address = name } end,
+            fn = function() push({ address = name }) end,
             immediate = false,
         }
     end,
@@ -384,7 +390,7 @@ add_prim(
         if compilation_depth > 0 then
             emit({ op = OP_LIT, value = q })
         else
-            PSTACK[#PSTACK + 1] = q
+            push(q)
         end
     end,
     true
@@ -421,7 +427,7 @@ add_prim(
         if compilation_depth > 0 then
             emit({ op = OP_LIT, value = str })
         else
-            PSTACK[#PSTACK + 1] = str
+            push(str)
         end
     end,
     true
@@ -443,7 +449,7 @@ add_prim(
         if compilation_depth > 0 then
             emit({ op = OP_LIT, value = w })
         else
-            PSTACK[#PSTACK + 1] = w
+            push(w)
         end
     end,
     true
@@ -454,7 +460,7 @@ add_prim(
     function()
         local c = fetch_char()
         if not c then ferror("No character input") end
-        PSTACK[#PSTACK + 1] = c
+        push(c)
     end,
     false
 )
@@ -516,43 +522,43 @@ add_prim(
 
 -- pure runtime primitives
 
-add_prim("nil", function() PSTACK[#PSTACK + 1] = nil end)
+add_prim("nil", function() push(nil) end)
 
-add_prim("+", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a + b end)
-add_prim("-", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a - b end)
-add_prim("*", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a * b end)
+add_prim("+", function() local a, b = pop2(); push(a + b) end)
+add_prim("-", function() local a, b = pop2(); push(a - b) end)
+add_prim("*", function() local a, b = pop2(); push(a * b) end)
 add_prim(
     "/",
     function()
         local a, b = pop2()
         if b == 0 then ferror("Division by zero") end
-        PSTACK[#PSTACK + 1] = a / b
+        push(a / b)
     end
 )
-add_prim("^", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a ^ b end)
+add_prim("^", function() local a, b = pop2(); push(a ^ b) end)
 
-add_prim("not", function() PSTACK[#PSTACK + 1] = not pop1() end)
-add_prim("and", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a and b end)
-add_prim("or", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a or b end)
+add_prim("not", function() push(not pop1()) end)
+add_prim("and", function() local a, b = pop2(); push(a and b) end)
+add_prim("or", function() local a, b = pop2(); push(a or b) end)
 
-add_prim("=", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a == b end)
-add_prim("~=", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a ~= b end)
-add_prim("<", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a < b end)
-add_prim(">", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a > b end)
-add_prim("<=", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a <= b end)
-add_prim(">=", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a >= b end)
+add_prim("=", function() local a, b = pop2(); push(a == b) end)
+add_prim("~=", function() local a, b = pop2(); push(a ~= b) end)
+add_prim("<", function() local a, b = pop2(); push(a < b) end)
+add_prim(">", function() local a, b = pop2(); push(a > b) end)
+add_prim("<=", function() local a, b = pop2(); push(a <= b) end)
+add_prim(">=", function() local a, b = pop2(); push(a >= b) end)
 
-add_prim("#", function() local a = pop1(); PSTACK[#PSTACK + 1] = #a end)
-add_prim("true", function() PSTACK[#PSTACK + 1] = true end)
-add_prim("false", function() PSTACK[#PSTACK + 1] = false end)
+add_prim("#", function() push(#pop1()) end)
+add_prim("true", function() push(true) end)
+add_prim("false", function() push(false) end)
 
-add_prim("..", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a .. b end )
+add_prim("..", function() local a, b = pop2(); push(a .. b) end)
 
 add_prim(
     "dup",
     function()
         if #PSTACK < 1 then ferror("dup: stack underflow") end
-        PSTACK[#PSTACK + 1] = PSTACK[#PSTACK]
+        push(PSTACK[#PSTACK])
     end
 )
 add_prim(
@@ -560,8 +566,9 @@ add_prim(
     function()
         if #PSTACK < 2 then ferror("2dup: stack underflow") end
         local n = #PSTACK
-        PSTACK[n + 1] = PSTACK[n - 1]
-        PSTACK[n + 2] = PSTACK[n]
+        local a, b = PSTACK[n - 1], PSTACK[n]
+        push(a)
+        push(b)
     end
 )
 add_prim(
@@ -569,9 +576,10 @@ add_prim(
     function()
         if #PSTACK < 3 then ferror("3dup: stack underflow") end
         local n = #PSTACK
-        PSTACK[n + 1] = PSTACK[n - 2]
-        PSTACK[n + 2] = PSTACK[n - 1]
-        PSTACK[n + 3] = PSTACK[n]
+        local a, b, c = PSTACK[n - 2], PSTACK[n - 1], PSTACK[n]
+        push(a)
+        push(b)
+        push(c)
     end
 )
 add_prim(
@@ -593,8 +601,7 @@ add_prim(
     "over",
     function()
         if #PSTACK < 2 then ferror("over: stack underflow") end
-        local n = #PSTACK
-        PSTACK[n + 1] = PSTACK[n - 1]
+        push(PSTACK[#PSTACK - 1])
     end
 )
 add_prim(
@@ -618,7 +625,7 @@ add_prim(
         if type(v) ~= "table" or not v.address then
             ferror("@: expected variable, got " .. tostring(v))
         end
-        PSTACK[#PSTACK + 1] = VARIABLES[v.address]
+        push(VARIABLES[v.address])
     end
 )
 
@@ -639,14 +646,16 @@ add_prim(
         local f, g = pop2()
         if type(f) ~= "table" or not f.body then ferror("compose: expected quotation") end
         if type(g) ~= "table" or not g.body then ferror("compose: expected quotation") end
-        PSTACK[#PSTACK + 1] = {
-            kind = "forth",
-            body = {
-                { op = OP_CALLQ, value = f },
-                { op = OP_TCALLQ, value = g },
-            },
-            repr = "[ " .. (f.repr or "?") .. " " .. (g.repr or "?") .. " ]",
-        }
+        push(
+            {
+                kind = "forth",
+                body = {
+                    { op = OP_CALLQ, value = f },
+                    { op = OP_TCALLQ, value = g },
+                },
+                repr = "[ " .. (f.repr or "?") .. " " .. (g.repr or "?") .. " ]",
+            }
+        )
     end
 )
 
@@ -655,14 +664,16 @@ add_prim(
     function()
         local arg, q = pop2()
         if type(q) ~= "table" or not q.body then ferror("curry: expected quotation") end
-        PSTACK[#PSTACK + 1] = {
-            kind = "forth",
-            body = {
-                { op = OP_LIT, value = arg },
-                { op = OP_TCALLQ, value = q },
-            },
-            repr = "[ <arg> " .. (q.repr or "?") .. " ]",
-        }
+        push(
+            {
+                kind = "forth",
+                body = {
+                    { op = OP_LIT, value = arg },
+                    { op = OP_TCALLQ, value = q },
+                },
+                repr = "[ <arg> " .. (q.repr or "?") .. " ]",
+            }
+        )
     end
 )
 
@@ -699,7 +710,7 @@ add_prim(
         end
         local result = { pcall(func, table.unpack(args)) }
         if not result[1] then ferror("luacall error: " .. tostring(result[2])) end
-        for i = 2, #result do PSTACK[#PSTACK + 1] = result[i] end
+        for i = 2, #result do push(result[i]) end
     end
 )
 
@@ -710,7 +721,7 @@ add_prim(
         local t = table.remove(PSTACK)
         if type(t) ~= "table" then ferror("get: expected a table") end
         if key == nil then ferror("get: key is nil") end
-        PSTACK[#PSTACK + 1] = t[key]
+        push(t[key])
     end
 )
 
@@ -718,7 +729,7 @@ add_prim(
 VOCAB[#VOCAB + 1] = {
     name = "cp",
     kind = "prim",
-    fn = function() PSTACK[#PSTACK + 1] = { address = "cp" } end,
+    fn = function() push({ address = "cp" }) end,
     immediate = false,
 }
 
@@ -757,7 +768,7 @@ local function process_token(token)
         else
             local n = tonumber(token)
             if n then
-                PSTACK[#PSTACK + 1] = n
+                push(n)
             else
                 ferror("Unknown word: " .. token)
             end
