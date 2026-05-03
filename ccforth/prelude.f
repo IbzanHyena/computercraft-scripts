@@ -1,3 +1,8 @@
+NB. renamings
+
+: t true ;
+: f false ;
+
 NB. arithemtic
 : +1 1 + ;
 : 1+ +1 ;
