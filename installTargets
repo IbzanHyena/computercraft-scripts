@@ -4,6 +4,8 @@
         "wget",
     },
     forth = {
+        "apis/extraString",
+        "apis/extraTurtle",
         "ccforth2",
         "ccforth/prelude",
         "ccforth/turtle",
