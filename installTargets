@@ -8,6 +8,7 @@
         "apis/extraTurtle",
         "ccforth2",
         "ccforth/prelude",
+        "ccforth/string",
         "ccforth/turtle",
     },
     utils = {
