@@ -1,7 +1,7 @@
 NB. turtle (and extraTurtle) bindings
 
 NB. load the api
-" /apis/extraTurtle" 1 " os" " loadAPI" luacall [ " Failed to load extraTurtle API" . ] unless
+" extraTurtle" try-load-api
 
 NB. vanilla turtle bindings
 : turtle.craft 0 " turtle" " craft" luacall ;

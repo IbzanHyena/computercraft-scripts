@@ -88,3 +88,9 @@ NB. system stuff
 : exit 1 " os" " exit" luacall ;
 : quit 0 exit ;
 : abort 1 exit ;
+: try-load-api dup
+    " /apis/" swap ..
+    1 " os" " loadAPI" luacall
+    " Failed to load" swap ..
+    " API" ..
+    [ drop ] [ . ] if ;

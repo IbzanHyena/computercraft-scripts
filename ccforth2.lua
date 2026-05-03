@@ -546,6 +546,8 @@ add_prim("#", function() local a = pop1(); PSTACK[#PSTACK + 1] = #a end)
 add_prim("true", function() PSTACK[#PSTACK + 1] = true end)
 add_prim("false", function() PSTACK[#PSTACK + 1] = false end)
 
+add_prim("..", function() local a, b = pop2(); PSTACK[#PSTACK + 1] = a .. b end )
+
 add_prim(
     "dup",
     function()
