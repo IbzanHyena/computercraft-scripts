@@ -5,6 +5,8 @@
     },
     forth = {
         "ccforth2",
+        "ccforth/prelude",
+        "ccforth/turtle",
     },
     utils = {
         "eyeintersect",

@@ -46,17 +46,27 @@ local function install(target)
         fs.makeDir(parent)
     end
 
-    -- now test for existence of the current file and replace if needed
-    if fs.exists(targetPath) then
-        fs.delete(targetPath)
-    end
-
-    -- finally, acquire the file
+    -- acquire the file
+    local fileType = "lua"
     local response = http.get(urlRoot .. target .. ".lua")
+    if not response then
+        fileType = "f"
+        response = http.get(urlRoot .. target .. ".f")
+    end
     if not response then
         print(" no response")
         return
     end
+
+    -- now test for existence of the current file and replace if needed
+    if fileType == "f" then
+        targetPath = targetPath .. ".f"
+    end
+
+    if fs.exists(targetPath) then
+        fs.delete(targetPath)
+    end
+
     local file = fs.open(targetPath, "w")
     file.write(response.readAll())
     response.close()
