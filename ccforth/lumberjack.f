@@ -142,12 +142,12 @@ NB. ( -- )
         length @ dup refuel
         [
             1 refuel
-            fwd right try-chop-tree left
+            fwd right try-chop-tree drop left
         ] repeat
         NB. order swaps in the opposite direction
         length @ dup refuel
         [
-            right try-chop-tree left
+            right try-chop-tree drop left
             1 refuel fwd
         ] repeat
         right right service
