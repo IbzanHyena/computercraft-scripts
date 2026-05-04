@@ -92,4 +92,4 @@ NB. ( pred -- i )
     swap drop ;
 
 NB. ( pred -- )
-: select-slot get-slot turtle.select ;
+: select-slot get-slot turtle.select drop ;

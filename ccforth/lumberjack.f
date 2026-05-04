@@ -37,5 +37,5 @@ NB. ( a b -- max )
     [ " sapling" name-is ] select-slot
     turtle.getItemDetail .count
     length 2 * swap - 0 max 
-    turtle.suck ;
+    turtle.suck drop ;
 
