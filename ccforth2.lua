@@ -227,6 +227,31 @@ push = function(v)
     PSTACK[#PSTACK + 1] = v
 end
 
+local process_token
+
+local LOADED_FILES = {}
+
+local function load_file(fname)
+    if LOADED_FILES[fname] then return end
+    LOADED_FILES[fname] = true
+    local file, err = io.open(fname, "r")
+    if not file then
+        ferror("Could not open file: " .. tostring(fname) .. " - " .. tostring(err))
+    end
+    local saved_source = current_source
+    local saved_buffer = word_buffer
+    current_source = file
+    word_buffer = nil
+    while true do
+        local w = fetch_word(false)
+        if not w then break end
+        process_token(w)
+    end
+    file:close()
+    current_source = saved_source
+    word_buffer = saved_buffer
+end
+
 -- compile-time / parser words
 
 add_prim(
@@ -725,6 +750,17 @@ add_prim(
     end
 )
 
+add_prim(
+    "require",
+    function()
+        local fname = pop1()
+        if type(fname) ~= "string" then
+            ferror("require: expected filename string, got " .. tostring(fname))
+        end
+        load_file(fname)
+    end
+)
+
 -- expose `cp` as a variable word
 VOCAB[#VOCAB + 1] = {
     name = "cp",
@@ -735,7 +771,7 @@ VOCAB[#VOCAB + 1] = {
 
 -- token dispatch
 
-local function process_token(token)
+process_token = function(token)
     local idx, entry = find_word(token)
 
     if entry and entry.immediate then
@@ -779,19 +815,7 @@ end
 -- file loading
 
 for _, fname in ipairs(argv) do
-    local file, err = io.open(fname, "r")
-    if not file then
-        ferror("Could not open file: " .. fname .. " - " .. tostring(err))
-    end
-    current_source = file
-    word_buffer = nil
-    while true do
-        local w = fetch_word(false)
-        if not w then break end
-        process_token(w)
-    end
-    file:close()
-    word_buffer = nil
+    load_file(fname)
 end
 
 current_source = stdin

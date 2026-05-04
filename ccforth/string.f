@@ -1,3 +1,4 @@
+" /ccforth/prelude.f" require
 " extraString" try-load-api
 
 NB. ( needle haystack -- ? )

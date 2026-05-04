@@ -1,4 +1,6 @@
 NB. turtle (and extraTurtle) bindings
+" /ccforth/prelude.f" require
+" /ccforth/string.f" require
 
 NB. load the api
 " extraTurtle" try-load-api

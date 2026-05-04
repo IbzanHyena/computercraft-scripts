@@ -1,3 +1,6 @@
+" /ccforth/prelude.f" require
+" /ccforth/turtle.f" require
+
 : rowCheckInterval 60 ;  NB. seconds
 : length 4 ;
 
