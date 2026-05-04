@@ -84,7 +84,7 @@ NB. ( -- )
 NB. ( -- )
 : plant-sapling
     [ sapling? ] select-slot
-    turtle.place drop ;
+    turtle.detect [ turtle.place drop ] unless ;
 
 NB. ( -- )
 : service
