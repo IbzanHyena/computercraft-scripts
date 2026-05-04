@@ -3,6 +3,7 @@
 
 variable: length 4 length !
 variable: check-interval 60 check-interval !
+variable: iteration-start
 variable: wood-harvested 0 wood-harvested !
 variable: trees-chopped 0 trees-chopped !
 
@@ -115,6 +116,7 @@ NB. ( -- )
     "  wood/s" ..
     . ;
 
+NB. ( -- )
 : try-chop-tree
     [ log? ]
     turtle.inspect
@@ -123,9 +125,32 @@ NB. ( -- )
     [ plant-sapling 3 ndrop false ]
     if ;
 
+NB. ( -- )
+NB. doesn't terminate
 : harvest-one
     [
         [ print-report ] now last-report-time @ - report-interval @ >= when
         try-chop-tree
         [ 5 sleep ] [ service ] if
+    ] forever ;
+
+NB. ( -- )
+: harvest-row
+    [
+        now iteration-start !
+        service
+        length @ dup refuel
+        [
+            1 refuel
+            fwd right try-chop-tree left
+        ] repeat
+        NB. order swaps in the opposite direction
+        length @ dup refuel
+        [
+            right try-chop-tree left
+            1 refuel fwd
+        ] repeat
+        right right service
+        print-report
+        now iteration-start @ - row-check-interval @ swap - 0 max sleep
     ] forever ;
