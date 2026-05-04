@@ -8,7 +8,7 @@ variable: trees-chopped 0 trees-chopped !
 
 : now 0 " os" " clock" luacall ;
 variable: start-time now start-time !
-variable: last-report-time start-time last-report-time !
+variable: last-report-time start-time @ last-report-time !
 variable: report-interval 300 report-interval !
 variable: report-separator? false report-separator? !
 
@@ -120,7 +120,7 @@ NB. ( time -- )
 
 : harvest-one
     [ now
-    dup [ print-report ] last-report-time @ - report-interval @ >= when
+    [ print-report ] over last-report-time @ - report-interval @ >= when
     try-chop-tree
     [ service ] [ 5 sleep ] if ]
     forever ;
