@@ -86,12 +86,12 @@ NB. ( -- )
     left grab-saplings
     left left ;
 
-NB. ( time -- )
+NB. ( -- )
 : print-report
     report-separator? @
-    [ " ----------" . ] [ report-separator? true ! ] if
+    [ " ----------" . ] [ true report-separator? ! ] if
 
-    dup dup
+    now dup dup
     last-report-time !
 
     " Now harvested "  wood-harvested @ ..
@@ -119,8 +119,8 @@ NB. ( time -- )
     if ;
 
 : harvest-one
-    [ now
-    [ print-report ] over last-report-time @ - report-interval @ >= when
-    try-chop-tree
-    [ service ] [ 5 sleep ] if ]
-    forever ;
+    [
+        now [ print-report ] last-report-time @ - report-interval @ >= when
+        try-chop-tree
+        [ service ] [ 5 sleep ] if
+    ] forever ;
