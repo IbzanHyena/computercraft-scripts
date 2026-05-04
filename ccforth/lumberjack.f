@@ -40,7 +40,7 @@ NB. ( pred ? block/err -- ? )
 : neither-log-nor-sapling? [ log? ] [ sapling? ] bi or not ;
 
 NB. ( val var -- )
-: incn dup @ + swap ! ;
+: incn dup [ @ + ] dip ! ;
 NB. ( var -- )
 : inc 1 swap incn ;
 
