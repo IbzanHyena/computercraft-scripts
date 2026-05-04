@@ -33,6 +33,7 @@ NB. looping constructs
 : while swap do compose [ loop ] curry when ;
 : until [ negate ] dip while ;
 : repeat [ 1 - ] compose [ dup positive? ] swap while drop ;
+: forever [ true ] swap while ;
 
 : ndrop [ [ drop ] dip ] repeat ;
 

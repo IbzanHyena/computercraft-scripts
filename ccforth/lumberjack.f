@@ -10,6 +10,7 @@ variable: trees-chopped 0 trees-chopped !
 variable: start-time now start-time !
 variable: last-report-time start-time last-report-time !
 variable: report-interval 300 report-interval !
+variable: report-separator? false report-separator !
 
 : item-detail turtle.getItemDetailSlot ;
 
@@ -85,10 +86,13 @@ NB. ( -- )
     left grab-saplings
     left left ;
 
-NB. ( time ? -- )
+NB. ( time -- )
 : print-report
-    [ " ----------" . ] when
-    dup
+    report-separator? @
+    [ " ----------" . ] [ report-separator? true ! ] if
+
+    dup dup
+    last-report-time !
 
     " Now harvested "  wood-harvested @ ..
     "  wood (" ..
@@ -105,3 +109,18 @@ NB. ( time ? -- )
     " Rate: " swap ..
     "  wood/s" ..
     . ;
+
+: try-chop-tree
+    [ log? ]
+    turtle.inspect
+    over
+    [ inspect-is? [ chop-tree ] when true ]
+    [ plant-sapling 3 ndrop false ]
+    if ;
+
+: harvest-one
+    [ now
+    dup [ print-report ] last-report-time @ - report-interval @ >= when
+    try-chop-tree
+    [ service ] [ 5 sleep ] if ]
+    forever ;
