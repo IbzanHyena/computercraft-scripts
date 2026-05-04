@@ -85,6 +85,7 @@ NB. logic
 : either? bi@ or ;
 
 NB. system stuff
+: type 1 false " type" luacall ;
 : sleep 1 " os" " sleep" luacall ;
 : exit 1 " os" " exit" luacall ;
 : quit 0 exit ;

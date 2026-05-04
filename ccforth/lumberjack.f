@@ -76,7 +76,11 @@ NB. ( -- )
         NB. does contain a log before continuing
         [ true ] [ turtle.getItemDetail log? not ] if
     ]
-    [ turtle.getItemCount + turtle.dropAll drop ]
+    [
+        turtle.getItemCount +
+        turtle.dropAll
+        dup type " string" = [ drop ] when drop
+    ]
     until
     wood-harvested incn ;
 
