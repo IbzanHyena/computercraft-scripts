@@ -36,7 +36,7 @@ NB. ( i -- )
 : refuel [ lava-crystal? ] extraTurtle.refuelToMinWith ;
 
 NB. ( pred ? block/err -- ? )
-: inspect-is? swap [ swap execute ] [ drop false ] if ;
+: inspect-is? swap [ swap execute ] [ 2 ndrop false ] if ;
 : neither-log-nor-sapling? [ log? ] [ sapling? ] bi or not ;
 
 NB. ( val var -- )
