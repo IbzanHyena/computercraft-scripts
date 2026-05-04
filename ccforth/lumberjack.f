@@ -144,6 +144,8 @@ NB. ( -- )
             1 refuel
             fwd right try-chop-tree drop left
         ] repeat
+        NB. turn around
+        left left
         NB. order swaps in the opposite direction
         length @ dup refuel
         [
