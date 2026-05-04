@@ -64,17 +64,20 @@ local function fill_word_buffer(print_stack)
 end
 
 local function fetch_word(print_stack)
-    if not word_buffer then
-        repeat
+    while true do
+        if not word_buffer then
             fill_word_buffer(print_stack)
-        until word_buffer == nil or word_buffer:find("%S")
+            if not word_buffer then return nil end
+        end
+        local i, j = word_buffer:find("%S+")
+        if i then
+            local w = word_buffer:sub(i, j)
+            word_buffer = word_buffer:sub(j + 1)
+            if word_buffer == "" then word_buffer = nil end
+            return w
+        end
+        word_buffer = nil
     end
-    if not word_buffer then return nil end
-    local i, j = word_buffer:find("%S+")
-    local w = word_buffer:sub(i, j)
-    word_buffer = word_buffer:sub(j + 1):gsub("^%s+", "")
-    if word_buffer == "" then word_buffer = nil end
-    return w
 end
 
 local function fetch_char()
@@ -424,6 +427,9 @@ add_prim(
 add_prim(
     "\"",
     function()
+        -- consume one delimiter character (the space separating `"` from the body)
+        local delim = fetch_char()
+        if not delim then ferror("Unterminated string literal") end
         local str = ""
         local escaped = false
         while true do
