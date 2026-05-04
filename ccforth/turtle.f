@@ -71,3 +71,25 @@ NB. extraTurtle bindings
 : extraTurtle.tolerantMove 1 " extraTurtle" " tolerantMove" luacall ;
 : extraTurtle.tolerantMoveN 2 " extraTurtle" " tolerantMove" luacall ;
 : extraTurtle.find 1 " extraTurtle" " find" luacall ;
+
+NB. higher-level functions
+NB. ( i -- ? )
+: slot-not-empty? turtle.getItemCountSlot positive? ;
+
+NB. ( pred i -- ? )
+: slot-matches?
+    dup slot-not-empty?
+    [ turtle.getItemDetailSlot swap execute ]
+    [ false ]
+    if ;
+
+NB. ( pred -- i )
+: get-slot 
+    1
+    [ dup 16 < [ 2dup slot-matches? ] [ true ] if ]
+    [ +1 ]
+    until
+    swap drop ;
+
+NB. ( pred -- )
+: select-slot get-slot turtle.select ;
