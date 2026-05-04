@@ -80,7 +80,7 @@ NB. ( pred i -- ? )
 : slot-matches?
     dup slot-not-empty?
     [ turtle.getItemDetailSlot swap execute ]
-    [ false ]
+    [ drop drop false ]
     if ;
 
 NB. ( pred -- i )
