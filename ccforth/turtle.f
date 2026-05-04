@@ -74,12 +74,16 @@ NB. extraTurtle bindings
 
 NB. higher-level functions
 NB. ( i -- ? )
-: slot-not-empty? turtle.getItemCountSlot positive? ;
+: slot-n-not-empty? turtle.getItemCountSlot positive? ;
+: slot-n-empty? slot-n-not-empty? not ;
+NB. current slot versions
+NB. ( -- ? )
+: slot-not-empty? turtle.getItemCount positive? ;
 : slot-empty? slot-not-empty? not ;
 
 NB. ( pred i -- ? )
-: slot-matches?
-    dup slot-not-empty?
+: slot-n-matches?
+    dup slot-n-not-empty?
     [ turtle.getItemDetailSlot swap execute ]
     [ drop drop false ]
     if ;
@@ -87,7 +91,7 @@ NB. ( pred i -- ? )
 NB. ( pred -- i )
 : get-slot 
     1
-    [ dup 16 < [ 2dup slot-matches? ] [ true ] if ]
+    [ dup 16 < [ 2dup slot-n-matches? ] [ true ] if ]
     [ +1 ]
     until
     swap drop ;
