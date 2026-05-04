@@ -18,7 +18,7 @@ NB. ( block needle -- ? )
 
 NB. ( block/item -- ? )
 : log? " log" name-is ;
-: saping? " sapling" name-is ;
+: sapling? " sapling" name-is ;
 
 NB. ( pred ? block/err -- ? )
 : inspect-is? swap [ execute ] [ drop false ] if ;
