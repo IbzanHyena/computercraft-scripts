@@ -143,7 +143,7 @@ NB. ( -- )
         [
             1 refuel
             fwd right
-            try-chop-tree [ plant-sapling drop ] when
+            try-chop-tree [ plant-sapling ] when
             left
         ] repeat
         NB. turn around
@@ -152,7 +152,7 @@ NB. ( -- )
         length @ dup refuel
         [
             right
-            try-chop-tree [ plant-sapling drop ] when
+            try-chop-tree [ plant-sapling ] when
             left 1 refuel fwd
         ] repeat
         right right service
