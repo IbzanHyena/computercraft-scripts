@@ -70,7 +70,12 @@ NB. ( -- )
 NB. ( -- )
 : return-wood
     0  NB. wood returned
-    [ [ log? ] select-slot slot-empty? ]
+    [
+        [ log? ] select-slot slot-empty?
+        NB. now check that the slot which is selected
+        NB. does contain a log before continuing
+        [ [ true ] [ turtle.getItemDetail log? not ] ] dip if
+    ]
     [ turtle.getItemCount + turtle.dropAll drop ]
     until
     wood-harvested incn ;
