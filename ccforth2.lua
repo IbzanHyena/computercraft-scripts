@@ -740,6 +740,38 @@ add_prim(
 )
 
 add_prim(
+    ">lua-fn",
+    function()
+        local q = pop1()
+        if type(q) ~= "table" or not q.body then
+            ferror(">lua-fn: expected quotation, got " .. tostring(q))
+        end
+        push(function(...)
+            local n_args = select("#", ...)
+            local args = { ... }
+            local before = #PSTACK
+            for i = 1, n_args do push(args[i]) end
+            local saved_body, saved_ip = body, ip
+            local saved_rstack = RSTACK
+            RSTACK = {}
+            body, ip = q.body, 1
+            local ok, err = pcall(run)
+            RSTACK = saved_rstack
+            body, ip = saved_body, saved_ip
+            if not ok then error(err) end
+            local n_results = #PSTACK - before
+            if n_results < 0 then
+                ferror("lua-fn: quotation underflowed the stack")
+            end
+            local results = {}
+            for i = 1, n_results do results[i] = PSTACK[before + i] end
+            for _ = 1, n_results do table.remove(PSTACK) end
+            return table.unpack(results, 1, n_results)
+        end)
+    end
+)
+
+add_prim(
     "get",
     function()
         local key = table.remove(PSTACK)
