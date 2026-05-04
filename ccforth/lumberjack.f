@@ -152,5 +152,5 @@ NB. ( -- )
         ] repeat
         right right service
         print-report
-        now iteration-start @ - row-check-interval @ swap - 0 max sleep
+        now iteration-start @ - check-interval @ swap - 0 max sleep
     ] forever ;
