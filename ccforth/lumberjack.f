@@ -32,14 +32,13 @@ NB. ( block needle -- ? )
 NB. ( block/item -- ? )
 : log? " log" name-is ;
 : sapling? " sapling" name-is ;
-: lava-crystal? " lavaCrystal" name-is ;
-
-NB. ( i -- )
-: refuel [ lava-crystal? ] extraTurtle.refuelToMinWith ;
 
 NB. ( pred ? block/err -- ? )
 : inspect-is? swap [ swap execute ] [ 2 ndrop false ] if ;
 : neither-log-nor-sapling? [ log? ] [ sapling? ] bi or not ;
+
+NB. ( i -- )
+: refuel [ neither-log-nor-sapling? ] extraTurtle.refuelToMinWith ;
 
 NB. ( val var -- )
 : incn dup [ @ + ] dip ! ;
