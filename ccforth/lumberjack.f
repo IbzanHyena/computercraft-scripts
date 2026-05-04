@@ -1,5 +1,5 @@
-: rowCheckInterval 60  NB. seconds
-: length 4
+: rowCheckInterval 60 ;  NB. seconds
+: length 4 ;
 
 : item-detail turtle.getItemDetailSlot ;
 
