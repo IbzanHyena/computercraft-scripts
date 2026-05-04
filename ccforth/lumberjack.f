@@ -1,8 +1,15 @@
 " /ccforth/prelude.f" require
 " /ccforth/turtle.f" require
 
-: rowCheckInterval 60 ;  NB. seconds
-: length 4 ;
+variable: length 4 length !
+variable: check-interval 60 check-interval !
+variable: wood-harvested 0 wood-harvested !
+variable: trees-chopped 0 trees-chopped !
+
+: now 0 " os" " clock" luacall ;
+variable: start-time now start-time !
+variable: last-report-time start-time last-report-time !
+variable: report-interval 300 report-interval !
 
 : item-detail turtle.getItemDetailSlot ;
 
@@ -11,6 +18,8 @@
 : down " down" extraTurtle.tolerantMove ;
 : downN " down" swap extraTurtle.tolerantMoveN ;
 : back " back" extraTurtle.tolerantMove ;
+: left turtle.turnLeft drop ;
+: right turtle.turnRight drop ;
 
 : .name " name" get ;
 : .count " count" get ;
@@ -30,7 +39,9 @@ NB. ( pred ? block/err -- ? )
 : inspect-is? swap [ execute ] [ drop false ] if ;
 : neither-log-nor-sapling? [ log? ] [ sapling? ] bi or not ;
 
+NB. ( -- )
 : chop-tree
+    trees-chopped @ +1 trees-chopped !
     turtle.dig drop
     1 refuel fwd
     0                                          NB. height
@@ -42,16 +53,50 @@ NB. ( pred ? block/err -- ? )
 NB. ( a b -- max )
 : max 2dup < [ swap ] when drop ;
 
+NB. ( -- )
 : grab-saplings
     [ sapling? ] select-slot
     slot-not-empty?
     [ turtle.getItemDetail .count ] [ 0 ] if
-    length 2 * swap - 0 max 
+    length @ 2 * swap - 0 max 
     turtle.suckN drop ;
 
+NB. ( -- )
 : return-wood
     0  NB. wood returned
     [ [ log? ] select-slot slot-empty? ]
     [ turtle.getItemCount + turtle.dropAll drop ]
-    until ;
+    until
+    wood-harvested @ + wood-harvested ! ;
 
+NB. ( -- )
+: plant-sapling
+    [ sapling? ] select-slot
+    turtle.place drop ;
+
+NB. ( -- )
+: service
+    left return-wood
+    left grab-saplings
+    left left ;
+
+NB. ( time ? -- )
+: print-report
+    [ " ----------" . ] when
+    dup dup
+
+    " Now harvested "  wood-harvested @ ..
+    "  wood (" ..
+    trees-chopped @ ..
+    "  trees)" ..
+    .
+
+    start-time @ -
+    " Time taken: " swap  ..
+    "  s" ..
+    .
+
+    " Rate: " wood-harvested @ ..
+    [ start-time - ] dip wood-harvested @ / ..
+    "  wood/s" ..
+    . ;
