@@ -75,7 +75,7 @@ NB. ( -- )
         [ log? ] select-slot slot-empty?
         NB. now check that the slot which is selected
         NB. does contain a log before continuing
-        [ [ true ] [ turtle.getItemDetail log? not ] ] dip if
+        [ true ] [ turtle.getItemDetail log? not ] if
     ]
     [ turtle.getItemCount + turtle.dropAll drop ]
     until
