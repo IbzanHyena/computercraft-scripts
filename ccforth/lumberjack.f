@@ -6,7 +6,6 @@
 
 : item-detail turtle.getItemDetailSlot ;
 
-: refuel extraTurtle.refuelToMin ;
 : fwd " forward" extraTurtle.tolerantMove ;
 : up " up" extraTurtle.tolerantMove ;
 : down " down" extraTurtle.tolerantMove ;
@@ -22,6 +21,10 @@ NB. ( block needle -- ? )
 NB. ( block/item -- ? )
 : log? " log" name-is ;
 : sapling? " sapling" name-is ;
+: lava-crystal? " lavaCrystal" name-is ;
+
+NB. ( i -- )
+: refuel [ lava-crystal? ] extraTurtle.refuelToMinWith ;
 
 NB. ( pred ? block/err -- ? )
 : inspect-is? swap [ execute ] [ drop false ] if ;

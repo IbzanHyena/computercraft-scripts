@@ -70,6 +70,7 @@ NB. vanilla turtle bindings
 
 NB. extraTurtle bindings
 : extraTurtle.refuelToMin 1 " extraTurtle" " refuelToMin" luacall ;
+: extraTurtle.refuelToMinWith >lua-fn 2 " extraTurtle" " refuelToMin" luacall ;
 : extraTurtle.tolerantMove 1 " extraTurtle" " tolerantMove" luacall ;
 : extraTurtle.tolerantMoveN 2 " extraTurtle" " tolerantMove" luacall ;
 : extraTurtle.find 1 " extraTurtle" " find" luacall ;
