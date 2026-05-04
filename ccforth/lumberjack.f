@@ -39,9 +39,14 @@ NB. ( pred ? block/err -- ? )
 : inspect-is? swap [ execute ] [ drop false ] if ;
 : neither-log-nor-sapling? [ log? ] [ sapling? ] bi or not ;
 
+NB. ( val var -- )
+: incn dup @ + swap ! ;
+NB. ( var -- )
+: inc 1 swap incn ;
+
 NB. ( -- )
 : chop-tree
-    trees-chopped @ +1 trees-chopped !
+    trees-chopped inc
     turtle.dig drop
     1 refuel fwd
     0                                          NB. height
@@ -67,7 +72,7 @@ NB. ( -- )
     [ [ log? ] select-slot slot-empty? ]
     [ turtle.getItemCount + turtle.dropAll drop ]
     until
-    wood-harvested @ + wood-harvested ! ;
+    wood-harvested incn ;
 
 NB. ( -- )
 : plant-sapling
