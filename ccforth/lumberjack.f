@@ -10,7 +10,7 @@ variable: trees-chopped 0 trees-chopped !
 variable: start-time now start-time !
 variable: last-report-time start-time last-report-time !
 variable: report-interval 300 report-interval !
-variable: report-separator? false report-separator !
+variable: report-separator? false report-separator? !
 
 : item-detail turtle.getItemDetailSlot ;
 
