@@ -35,7 +35,8 @@ NB. ( a b -- max )
 
 : grab-saplings
     [ " sapling" name-is ] select-slot
-    turtle.getItemDetail .count
+    turtle.getItemCount positive?
+    [ turtle.getItemDetail .count ] [ 0 ] if
     length 2 * swap - 0 max 
     turtle.suckN drop ;
 
