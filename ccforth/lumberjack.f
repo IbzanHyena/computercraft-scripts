@@ -83,7 +83,7 @@ NB. ( -- )
 NB. ( time ? -- )
 : print-report
     [ " ----------" . ] when
-    dup dup
+    dup
 
     " Now harvested "  wood-harvested @ ..
     "  wood (" ..
@@ -96,7 +96,7 @@ NB. ( time ? -- )
     "  s" ..
     .
 
-    " Rate: " wood-harvested @ ..
-    [ start-time - ] dip wood-harvested @ / ..
+    start-time @ - wood-harvested @ swap /
+    " Rate: " swap ..
     "  wood/s" ..
     . ;
