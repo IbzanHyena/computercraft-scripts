@@ -120,7 +120,7 @@ NB. ( -- )
 
 : harvest-one
     [
-        now [ print-report ] last-report-time @ - report-interval @ >= when
+        [ print-report ] now last-report-time @ - report-interval @ >= when
         try-chop-tree
         [ service ] [ 5 sleep ] if
     ] forever ;
