@@ -122,5 +122,5 @@ NB. ( -- )
     [
         [ print-report ] now last-report-time @ - report-interval @ >= when
         try-chop-tree
-        [ service ] [ 5 sleep ] if
+        [ 5 sleep ] [ service ] if
     ] forever ;
