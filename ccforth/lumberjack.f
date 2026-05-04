@@ -43,3 +43,9 @@ NB. ( a b -- max )
     length 2 * swap - 0 max 
     turtle.suckN drop ;
 
+: return-wood
+    0  NB. wood returned
+    [ [ log? ] select-slot slot-empty? ]
+    [ turtle.getItemCount + turtle.dropAll drop ]
+    until ;
+

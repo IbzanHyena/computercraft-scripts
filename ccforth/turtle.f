@@ -75,6 +75,7 @@ NB. extraTurtle bindings
 NB. higher-level functions
 NB. ( i -- ? )
 : slot-not-empty? turtle.getItemCountSlot positive? ;
+: slot-empty? slot-not-empty? not ;
 
 NB. ( pred i -- ? )
 : slot-matches?
