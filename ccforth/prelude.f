@@ -3,9 +3,9 @@ NB. variable and current pointer stuff
 : here cp @ ;
 : allot cp @ + cp ! ;
 : , here ! 1 allot ;
-: variable: create nil , ; immediate
-: constant: create , does> @ ; immediate
 : variable!: create , ; immediate
+: variable: 0 ' variable!: execute ; immediate
+: constant: create , does> @ ; immediate
 : array: create allot does> + ; immediate
 
 NB. renamings
