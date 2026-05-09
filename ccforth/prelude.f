@@ -6,6 +6,7 @@ NB. variable and current pointer stuff
 : variable: create nil , ; immediate
 : constant: create , does> @ ; immediate
 : variable!: create , ; immediate
+: array: create allot does> + ; immediate
 
 NB. renamings
 
