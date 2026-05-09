@@ -20,6 +20,7 @@ local compile_stack = {}
 local current_def = nil
 local current_word_idx = nil
 local compilation_depth = 0
+local last_created = nil
 
 local OP_LIT, OP_CALL, OP_TCALL, OP_EXEC, OP_TEXEC,
       OP_IF, OP_TIF, OP_DIP, OP_CALLQ, OP_TCALLQ
@@ -136,6 +137,12 @@ local function run()
                 local entry = VOCAB[insn.target]
                 if entry.kind == "prim" then
                     entry.fn()
+                elseif entry.kind == "create" then
+                    push({address = entry.address})
+                    if entry.does_body then
+                        RSTACK[#RSTACK + 1] = { body, ip }
+                        body, ip = entry.does_body, 1
+                    end
                 else
                     RSTACK[#RSTACK + 1] = { body, ip }
                     body, ip = entry.body, 1
@@ -144,6 +151,11 @@ local function run()
                 local entry = VOCAB[insn.target]
                 if entry.kind == "prim" then
                     entry.fn()
+                elseif entry.kind == "create" then
+                    push({address = entry.address})
+                    if entry.does_body then
+                        body, ip = entry.does_body, 1
+                    end
                 else
                     body, ip = entry.body, 1
                 end
@@ -341,16 +353,6 @@ add_prim(
 )
 
 add_prim(
-    "immediate",
-    function()
-        if compilation_depth == 0 then ferror("immediate outside compile mode") end
-        if not current_def then ferror("No current definition") end
-        current_def.immediate = true
-    end,
-    true
-)
-
-add_prim(
     "recurse",
     function()
         if compilation_depth == 0 then ferror("recurse outside compile mode") end
@@ -360,21 +362,6 @@ add_prim(
     true
 )
 
-add_prim(
-    "variable:",
-    function()
-        local name = fetch_word()
-        if not name then ferror("variable: expects a name") end
-        if VARIABLES[name] == nil then VARIABLES[name] = nil end
-        VOCAB[#VOCAB + 1] = {
-            name = name,
-            kind = "prim",
-            fn = function() push({ address = name }) end,
-            immediate = false,
-        }
-    end,
-    true
-)
 
 local SPECIAL_OPCODE = {
     ["if"] = OP_IF,
@@ -464,26 +451,23 @@ add_prim(
     true
 )
 
+-- strictly this could be a colon word, but I want comments from the beginning
+-- : NB. [ key 10 = ] [ ] until ;
 add_prim(
     "NB.",
     function()
         local c
         repeat c = fetch_char() until c == "\n" or c == nil
-    end,
-    true
+    end
 )
 
 add_prim(
     "word",
     function()
         local w = fetch_word()
-        if compilation_depth > 0 then
-            emit({ op = OP_LIT, value = w })
-        else
-            push(w)
-        end
-    end,
-    true
+        if not w then ferror("word: end of input") end
+        push(w)
+    end
 )
 
 add_prim(
@@ -492,8 +476,40 @@ add_prim(
         local c = fetch_char()
         if not c then ferror("No character input") end
         push(c)
-    end,
-    false
+    end
+)
+
+-- word creation and patching
+
+add_prim(
+    "create",
+    function()
+        local name = fetch_word()
+        if not name then ferror("create: no name") end
+        local addr = VARIABLES.cp
+        local entry = {
+            name = name,
+            kind = "create",
+            address = addr,
+            does_body = nil,
+            immediate = false
+        }
+        VOCAB[#VOCAB + 1] = entry
+        last_created = entry
+    end
+)
+
+add_prim(
+    "does>",
+    function()
+    end
+)
+
+add_prim(
+    "immediate",
+    function()
+        
+    end
 )
 
 -- fundamental combinators (immediate; emit inline opcodes when compiling)
@@ -815,6 +831,11 @@ process_token = function(token)
     if entry and entry.immediate then
         if entry.kind == "prim" then
             entry.fn()
+        elseif entry.kind == "create" then
+            push({ address = entry.address })
+            if entry.does_body then
+                run_body(entry.body)
+            end
         else
             run_body(entry.body)
         end
@@ -836,6 +857,11 @@ process_token = function(token)
         if entry then
             if entry.kind == "prim" then
                 entry.fn()
+            elseif entry.kind == "create" then
+                push({ address = entry.address })
+                if entry.does_body then
+                    run_body(entry.body)
+                end
             else
                 run_body(entry.body)
             end
@@ -880,6 +906,7 @@ local function reset_after_error()
     current_word_idx = nil
     compilation_depth = 0
     word_buffer = nil
+    last_created = nil
 end
 
 while true do
