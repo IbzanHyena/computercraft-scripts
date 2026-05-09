@@ -10,7 +10,7 @@ local VOCAB = {}
 local stdin = io.input()
 
 VARIABLES = {
-    cp = 1,
+    [0] = 1, -- cp lives at address 0; its value is the next free address
 }
 
 local current_source = stdin
@@ -21,6 +21,7 @@ local current_def = nil
 local current_word_idx = nil
 local compilation_depth = 0
 local last_created = nil
+local last_defined = nil
 
 local OP_LIT, OP_CALL, OP_TCALL, OP_EXEC, OP_TEXEC,
       OP_IF, OP_TIF, OP_DIP, OP_CALLQ, OP_TCALLQ
@@ -138,7 +139,7 @@ local function run()
                 if entry.kind == "prim" then
                     entry.fn()
                 elseif entry.kind == "create" then
-                    push({address = entry.address})
+                    push(entry.address)
                     if entry.does_body then
                         RSTACK[#RSTACK + 1] = { body, ip }
                         body, ip = entry.does_body, 1
@@ -152,7 +153,7 @@ local function run()
                 if entry.kind == "prim" then
                     entry.fn()
                 elseif entry.kind == "create" then
-                    push({address = entry.address})
+                    push(entry.address)
                     if entry.does_body then
                         body, ip = entry.does_body, 1
                     end
@@ -306,6 +307,7 @@ add_prim(
         detect_tail_calls(frame.entry.body)
         if frame.is_named then
             frame.entry.name = frame.pending_name
+            last_defined = frame.entry
         end
         if #compile_stack > 0 then
             current_def = compile_stack[#compile_stack].entry
@@ -486,7 +488,7 @@ add_prim(
     function()
         local name = fetch_word()
         if not name then ferror("create: no name") end
-        local addr = VARIABLES.cp
+        local addr = VARIABLES[0]
         local entry = {
             name = name,
             kind = "create",
@@ -502,13 +504,20 @@ add_prim(
 add_prim(
     "does>",
     function()
+        if not last_created then ferror("does>: nothing last_created") end
+        local remainder = {}
+        for i = ip, #body do remainder[#remainder + 1] = body[i] end
+        detect_tail_calls(remainder)
+        last_created.does_body = remainder
+        ip = #body + 1
     end
 )
 
 add_prim(
     "immediate",
     function()
-        
+        if not last_defined then ferror("immediate: no last_defined") end
+        last_defined.immediate = true
     end
 )
 
@@ -669,10 +678,10 @@ add_prim(
     "@",
     function()
         local v = pop1()
-        if type(v) ~= "table" or not v.address then
-            ferror("@: expected variable, got " .. tostring(v))
+        if type(v) ~= "number" then
+            ferror("@: expected address (number), got " .. tostring(v))
         end
-        push(VARIABLES[v.address])
+        push(VARIABLES[v])
     end
 )
 
@@ -680,10 +689,10 @@ add_prim(
     "!",
     function()
         local val, v = pop2()
-        if type(v) ~= "table" or not v.address then
-            ferror("!: expected variable, got " .. tostring(v))
+        if type(v) ~= "number" then
+            ferror("!: expected address (number), got " .. tostring(v))
         end
-        VARIABLES[v.address] = val
+        VARIABLES[v] = val
     end
 )
 
@@ -819,7 +828,7 @@ add_prim(
 VOCAB[#VOCAB + 1] = {
     name = "cp",
     kind = "prim",
-    fn = function() push({ address = "cp" }) end,
+    fn = function() push(0) end,
     immediate = false,
 }
 
@@ -832,9 +841,9 @@ process_token = function(token)
         if entry.kind == "prim" then
             entry.fn()
         elseif entry.kind == "create" then
-            push({ address = entry.address })
+            push(entry.address)
             if entry.does_body then
-                run_body(entry.body)
+                run_body(entry.does_body)
             end
         else
             run_body(entry.body)
@@ -858,9 +867,9 @@ process_token = function(token)
             if entry.kind == "prim" then
                 entry.fn()
             elseif entry.kind == "create" then
-                push({ address = entry.address })
+                push(entry.address)
                 if entry.does_body then
-                    run_body(entry.body)
+                    run_body(entry.does_body)
                 end
             else
                 run_body(entry.body)
