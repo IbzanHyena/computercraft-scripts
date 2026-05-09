@@ -1,17 +1,17 @@
 " /ccforth/prelude.f" require
 " /ccforth/turtle.f" require
 
-variable: length 4 length !
-variable: check-interval 60 check-interval !
+4 variable!: length
+60 variable!: check-interval 60
 variable: iteration-start
-variable: wood-harvested 0 wood-harvested !
-variable: trees-chopped 0 trees-chopped !
+0 variable!: wood-harvested 0
+0 variable!: trees-chopped
 
 : now 0 " os" " clock" luacall ;
-variable: start-time now start-time !
-variable: last-report-time start-time @ last-report-time !
-variable: report-interval 300 report-interval !
-variable: report-separator? false report-separator? !
+now variable!: start-time
+start-time @ variable!: last-report-time 
+300 variable!: report-interval
+false variable!: report-separator?
 
 : item-detail turtle.getItemDetailSlot ;
 
