@@ -13,7 +13,7 @@ NB. renamings
 : t true ;
 : f false ;
 
-NB. arithemtic
+NB. arithmetic
 : +1 1 + ;
 : 1+ +1 ;
 : 1- 1 swap - ;
