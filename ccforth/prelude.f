@@ -1,3 +1,12 @@
+NB. variable and current pointer stuff
+: ? @ . ;
+: here cp @ ;
+: allot cp @ + cp ! ;
+: , here ! 1 allot ;
+: variable: create nil , ; immediate
+: constant: create , does> @ ; immediate
+: variable!: create , ; immediate
+
 NB. renamings
 
 : t true ;
@@ -36,15 +45,6 @@ NB. looping constructs
 : forever [ true ] swap while ;
 
 : ndrop [ [ drop ] dip ] repeat ;
-
-NB. variable and current pointer stuff
-: ? @ . ;
-: here cp @ ;
-: allot cp @ + cp ! ;
-: , here ! 1 allot ;
-: variable: create nil , ; immediate
-: constant: create , does> @ ; immediate
-: variable!: create , ; immediate
 
 NB. maths
 : fac [ positive? ] [ dup 1 - recurse * ] [ drop 1 ] 1if ;
