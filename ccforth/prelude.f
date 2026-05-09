@@ -4,7 +4,7 @@ NB. variable and current pointer stuff
 : allot cp @ + cp ! ;
 : , here ! 1 allot ;
 : variable!: create , ; immediate
-: variable: 0 ' variable!: execute ; immediate
+: variable: create 1 allot ; immediate
 : constant: create , does> @ ; immediate
 : array: create allot does> + ; immediate
 
