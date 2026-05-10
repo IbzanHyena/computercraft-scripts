@@ -115,7 +115,7 @@ local function detect_tail_calls(b)
     end
 end
 
-local push
+local push, pop1, pop2, pop3
 
 local function run()
     while true do
@@ -168,15 +168,13 @@ local function run()
                 RSTACK[#RSTACK + 1] = { body, ip }
                 body, ip = q.body, 1
             elseif op == OP_TEXEC then
-                local q = table.remove(PSTACK)
+                local q = pop1()
                 if type(q) ~= "table" or not q.body then
                     ferror("execute: expected quotation, got " .. tostring(q))
                 end
                 body, ip = q.body, 1
             elseif op == OP_IF then
-                local fq = table.remove(PSTACK)
-                local tq = table.remove(PSTACK)
-                local cond = table.remove(PSTACK)
+                local cond, tq, fq = pop3()
                 local q = cond and tq or fq
                 if type(q) ~= "table" or not q.body then
                     ferror("if: expected quotation, got " .. tostring(q))
@@ -184,17 +182,14 @@ local function run()
                 RSTACK[#RSTACK + 1] = { body, ip }
                 body, ip = q.body, 1
             elseif op == OP_TIF then
-                local fq = table.remove(PSTACK)
-                local tq = table.remove(PSTACK)
-                local cond = table.remove(PSTACK)
+                local cond, tq, fq = pop3()
                 local q = cond and tq or fq
                 if type(q) ~= "table" or not q.body then
                     ferror("if: expected quotation, got " .. tostring(q))
                 end
                 body, ip = q.body, 1
             elseif op == OP_DIP then
-                local q = table.remove(PSTACK)
-                local v = table.remove(PSTACK)
+                local v, q = pop2()
                 if type(q) ~= "table" or not q.body then
                     ferror("dip: expected quotation, got " .. tostring(q))
                 end
@@ -227,16 +222,24 @@ local function add_prim(name, fn, immediate)
     }
 end
 
-local function pop2()
+pop1 = function()
+    if #PSTACK < 1 then ferror("stack underflow") end
+    return table.remove(PSTACK)
+end
+
+pop2 = function()
     if #PSTACK < 2 then ferror("stack underflow") end
     local b = table.remove(PSTACK)
     local a = table.remove(PSTACK)
     return a, b
 end
 
-local function pop1()
-    if #PSTACK < 1 then ferror("stack underflow") end
-    return table.remove(PSTACK)
+pop3 = function()
+    if #PSTACK < 3 then ferror("stack underflow") end
+    local c = table.remove(PSTACK)
+    local b = table.remove(PSTACK)
+    local a = table.remove(PSTACK)
+    return a, b, c
 end
 
 push = function(v)
@@ -529,14 +532,12 @@ add_prim(
         if compilation_depth > 0 then
             emit({ op = OP_IF })
         else
-            local fq = table.remove(PSTACK)
-            local tq = table.remove(PSTACK)
-        local cond = table.remove(PSTACK)
-        local q = cond and tq or fq
-        if type(q) ~= "table" or not q.body then
-            ferror("if: expected quotation, got " .. tostring(q))
-        end
-        run_body(q.body)
+            local cond, tq, fq = pop3()
+            local q = cond and tq or fq
+            if type(q) ~= "table" or not q.body then
+                ferror("if: expected quotation, got " .. tostring(q))
+            end
+            run_body(q.body)
         end
     end,
     true
@@ -548,7 +549,7 @@ add_prim(
         if compilation_depth > 0 then
             emit({ op = OP_EXEC })
         else
-            local q = table.remove(PSTACK)
+            local q = pop1()
             if type(q) ~= "table" or not q.body then
                 ferror("execute: expected quotation, got " .. tostring(q))
             end
@@ -564,8 +565,7 @@ add_prim(
         if compilation_depth > 0 then
             emit({ op = OP_DIP })
         else
-            local q = table.remove(PSTACK)
-            local v = table.remove(PSTACK)
+            local v, q = pop2()
             if type(q) ~= "table" or not q.body then
                 ferror("dip: expected quotation, got " .. tostring(q))
             end
@@ -607,6 +607,7 @@ add_prim(">=", function() local a, b = pop2(); push(a >= b) end)
 add_prim("#", function() push(#pop1()) end)
 add_prim("true", function() push(true) end)
 add_prim("false", function() push(false) end)
+add_prim("{}", function() push({}) end)
 
 add_prim("..", function() local a, b = pop2(); push(a .. b) end)
 
@@ -650,7 +651,7 @@ add_prim(
     "drop",
     function()
         if #PSTACK < 1 then ferror("drop: stack underflow") end
-        table.remove(PSTACK)
+        pop1()
     end
 )
 add_prim(
@@ -805,11 +806,20 @@ add_prim(
 add_prim(
     "get",
     function()
-        local key = table.remove(PSTACK)
-        local t = table.remove(PSTACK)
+        local t, key = pop2()
         if type(t) ~= "table" then ferror("get: expected a table") end
         if key == nil then ferror("get: key is nil") end
         push(t[key])
+    end
+)
+
+add_prim(
+    "assoc",
+    function()
+        local k, v, t = pop3()
+        if tpye(t) ~= "table" then ferror("assoc: expected a table") end
+        t[k] = v
+        push(t)
     end
 )
 
