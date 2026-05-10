@@ -1,23 +1,25 @@
 variable: max-value
-variable: results
+variable: results-start
+NB. ( i -- addr )
+: results results-start @ + ;
 
 NB. ( -- )
 : initialise-results
+  here results-start !
+  max-value @ 1+ allot
   max-value @
-  1 {} [ [ 2dup >= ] dip swap ] [ [ dup 1+ swap ] dip t swap assoc ] while swap drop
-  [ 1 f ] dip assoc
-  results ! drop
+  1 [ 2dup >= ] [ dup 1+ swap results t swap ! ] while drop drop
+  f 1 results !
   ;
 
 NB. ( n -- )
 : prime-found
   dup
-  [ 2dup + max-value @ <= ] [ over + dup f results @ assoc drop ] while
+  [ 2dup + max-value @ <= ] [ over + dup f swap results ! ] while
   drop drop ;
 
 NB. ( n -- ? )
-: test-prime
-  results @ swap get ;
+: test-prime results @ ;
 
 NB. ( -- )
 : find-all-primes
@@ -28,7 +30,7 @@ NB. ( -- )
 NB. ( -- )
 : print-results
   1
-  [ dup max-value @ <= ] [ dup results @ swap get [ dup . ] when 1+ ] while
+  [ dup max-value @ <= ] [ dup results @ [ dup . ] when 1+ ] while
   drop ;
 
 NB. ( n -- )
