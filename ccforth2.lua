@@ -1,6 +1,15 @@
 local argv = { ... }
 
 local reset = false
+local files = {}
+for _, arg in ipairs(argv) do
+    if arg == "--reset" or arg == "-r" then
+        reset = true
+    else
+        files[#files + 1] = arg
+    end
+end
+
 PSTACK = {}
 local RSTACK = {}
 local body, ip
@@ -897,7 +906,7 @@ end
 
 -- file loading
 
-for _, fname in ipairs(argv) do
+for _, fname in ipairs(files) do
     load_file(fname)
 end
 
