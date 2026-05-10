@@ -8,6 +8,9 @@ NB. variable and current pointer stuff
 : constant: create , does> @ ; immediate
 : array: create allot does> + ; immediate
 
+NB. Debugging and script helpers
+: ." ' " execute . ; immediate
+
 NB. renamings
 
 : t true ;
