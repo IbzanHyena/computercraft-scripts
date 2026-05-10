@@ -132,6 +132,24 @@ end
 
 local push, pop1, pop2, pop3
 
+local function push_or_emit(value)
+    if compilation_depth > 0 then
+        emit({ op = OP_LIT, value = value })
+    else
+        push(value)
+    end
+end
+
+local function combinator(op, inline_fn)
+    return function()
+        if compilation_depth > 0 then
+            emit({ op = op })
+        else
+            inline_fn()
+        end
+    end
+end
+
 local function dispatch_entry(entry, tail)
     if entry.kind == "prim" then
         entry.fn()
@@ -405,11 +423,7 @@ add_prim(
                 end
             end
         end
-        if compilation_depth > 0 then
-            emit({ op = OP_LIT, value = q })
-        else
-            push(q)
-        end
+        push_or_emit(q)
     end,
     true
 )
@@ -445,11 +459,7 @@ add_prim(
                 end
             end
         end
-        if compilation_depth > 0 then
-            emit({ op = OP_LIT, value = str })
-        else
-            push(str)
-        end
+        push_or_emit(str)
     end,
     true
 )
@@ -524,49 +534,25 @@ add_prim(
 
 -- fundamental combinators (immediate; emit inline opcodes when compiling)
 
-add_prim(
-    "if",
-    function()
-        if compilation_depth > 0 then
-            emit({ op = OP_IF })
-        else
-            local cond, tq, fq = pop3()
-            local q = cond and tq or fq
-            check_quotation("if", q)
-            run_body(q.body)
-        end
-    end,
-    true
-)
+add_prim("if", combinator(OP_IF, function()
+    local cond, tq, fq = pop3()
+    local q = cond and tq or fq
+    check_quotation("if", q)
+    run_body(q.body)
+end), true)
 
-add_prim(
-    "execute",
-    function()
-        if compilation_depth > 0 then
-            emit({ op = OP_EXEC })
-        else
-            local q = pop1()
-            check_quotation("execute", q)
-            run_body(q.body)
-        end
-    end,
-    true
-)
+add_prim("execute", combinator(OP_EXEC, function()
+    local q = pop1()
+    check_quotation("execute", q)
+    run_body(q.body)
+end), true)
 
-add_prim(
-    "dip",
-    function()
-        if compilation_depth > 0 then
-            emit({ op = OP_DIP })
-        else
-            local v, q = pop2()
-            check_quotation("dip", q)
-            RSTACK[#RSTACK + 1] = { { { op = OP_LIT, value = v } }, 1 }
-            run_body(q.body)
-        end
-    end,
-    true
-)
+add_prim("dip", combinator(OP_DIP, function()
+    local v, q = pop2()
+    check_quotation("dip", q)
+    RSTACK[#RSTACK + 1] = { { { op = OP_LIT, value = v } }, 1 }
+    run_body(q.body)
+end), true)
 
 -- pure runtime primitives
 
