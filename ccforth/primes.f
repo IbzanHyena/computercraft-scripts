@@ -34,7 +34,7 @@ NB. ( n -- )
 : find-all-primes-up-to
   max-value !
   initialise-results
-  find-all-primes
+  find-all-primes ;
 
 NB. ( n -- )
 : print-primes-up-to
