@@ -61,6 +61,12 @@ local function ferror(msg)
     error()
 end
 
+local function check_quotation(name, q)
+    if type(q) ~= "table" or not q.body then
+        ferror(name .. ": expected quotation, got " .. tostring(q))
+    end
+end
+
 local function fill_word_buffer(print_stack)
     if print_stack and #PSTACK > 0 then
         io.write("Program stack:\n" .. dump(PSTACK) .. "\n")
@@ -171,37 +177,27 @@ local function run()
                 end
             elseif op == OP_EXEC then
                 local q = table.remove(PSTACK)
-                if type(q) ~= "table" or not q.body then
-                    ferror("execute: expected quotation, got " .. tostring(q))
-                end
+                check_quotation("execute", q)
                 RSTACK[#RSTACK + 1] = { body, ip }
                 body, ip = q.body, 1
             elseif op == OP_TEXEC then
                 local q = pop1()
-                if type(q) ~= "table" or not q.body then
-                    ferror("execute: expected quotation, got " .. tostring(q))
-                end
+                check_quotation("execute", q)
                 body, ip = q.body, 1
             elseif op == OP_IF then
                 local cond, tq, fq = pop3()
                 local q = cond and tq or fq
-                if type(q) ~= "table" or not q.body then
-                    ferror("if: expected quotation, got " .. tostring(q))
-                end
+                check_quotation("if", q)
                 RSTACK[#RSTACK + 1] = { body, ip }
                 body, ip = q.body, 1
             elseif op == OP_TIF then
                 local cond, tq, fq = pop3()
                 local q = cond and tq or fq
-                if type(q) ~= "table" or not q.body then
-                    ferror("if: expected quotation, got " .. tostring(q))
-                end
+                check_quotation("if", q)
                 body, ip = q.body, 1
             elseif op == OP_DIP then
                 local v, q = pop2()
-                if type(q) ~= "table" or not q.body then
-                    ferror("dip: expected quotation, got " .. tostring(q))
-                end
+                check_quotation("dip", q)
                 RSTACK[#RSTACK + 1] = { body, ip }
                 RSTACK[#RSTACK + 1] = { { { op = OP_LIT, value = v } }, 1 }
                 body, ip = q.body, 1
@@ -543,9 +539,7 @@ add_prim(
         else
             local cond, tq, fq = pop3()
             local q = cond and tq or fq
-            if type(q) ~= "table" or not q.body then
-                ferror("if: expected quotation, got " .. tostring(q))
-            end
+            check_quotation("if", q)
             run_body(q.body)
         end
     end,
@@ -559,9 +553,7 @@ add_prim(
             emit({ op = OP_EXEC })
         else
             local q = pop1()
-            if type(q) ~= "table" or not q.body then
-                ferror("execute: expected quotation, got " .. tostring(q))
-            end
+            check_quotation("execute", q)
             run_body(q.body)
         end
     end,
@@ -575,9 +567,7 @@ add_prim(
             emit({ op = OP_DIP })
         else
             local v, q = pop2()
-            if type(q) ~= "table" or not q.body then
-                ferror("dip: expected quotation, got " .. tostring(q))
-            end
+            check_quotation("dip", q)
             RSTACK[#RSTACK + 1] = { { { op = OP_LIT, value = v } }, 1 }
             run_body(q.body)
         end
@@ -710,8 +700,8 @@ add_prim(
     "compose",
     function()
         local f, g = pop2()
-        if type(f) ~= "table" or not f.body then ferror("compose: expected quotation") end
-        if type(g) ~= "table" or not g.body then ferror("compose: expected quotation") end
+        check_quotation("compose", f)
+        check_quotation("compose", g)
         push(
             {
                 kind = "forth",
@@ -729,7 +719,7 @@ add_prim(
     "curry",
     function()
         local arg, q = pop2()
-        if type(q) ~= "table" or not q.body then ferror("curry: expected quotation") end
+        check_quotation("curry", q)
         push(
             {
                 kind = "forth",
@@ -784,9 +774,7 @@ add_prim(
     ">lua-fn",
     function()
         local q = pop1()
-        if type(q) ~= "table" or not q.body then
-            ferror(">lua-fn: expected quotation, got " .. tostring(q))
-        end
+        check_quotation(">lua-fn", q)
         push(function(...)
             local n_args = select("#", ...)
             local args = { ... }
