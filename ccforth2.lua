@@ -817,7 +817,7 @@ add_prim(
     "assoc",
     function()
         local k, v, t = pop3()
-        if tpye(t) ~= "table" then ferror("assoc: expected a table") end
+        if type(t) ~= "table" then ferror("assoc: expected a table") end
         t[k] = v
         push(t)
     end
