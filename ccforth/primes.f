@@ -18,13 +18,10 @@ NB. ( n -- )
   [ 2dup + max-value @ <= ] [ over + dup f swap results ! ] while
   drop drop ;
 
-NB. ( n -- ? )
-: test-prime results @ ;
-
 NB. ( -- )
 : find-all-primes
   2
-  [ dup max-value @ <= ] [ dup test-prime [ dup prime-found ] when 1+ ] while
+  [ dup max-value @ <= ] [ dup results @ [ dup prime-found ] when 1+ ] while
   drop ;
 
 NB. ( -- )
@@ -34,8 +31,12 @@ NB. ( -- )
   drop ;
 
 NB. ( n -- )
-: print-primes-up-to
+: find-all-primes-up-to
   max-value !
   initialise-results
   find-all-primes
+
+NB. ( n -- )
+: print-primes-up-to
+  find-all-primes-up-to
   print-results ;
