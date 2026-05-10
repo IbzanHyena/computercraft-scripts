@@ -132,6 +132,21 @@ end
 
 local push, pop1, pop2, pop3
 
+local function dispatch_entry(entry, tail)
+    if entry.kind == "prim" then
+        entry.fn()
+    elseif entry.kind == "create" then
+        push(entry.address)
+        if entry.does_body then
+            if not tail then RSTACK[#RSTACK + 1] = { body, ip } end
+            body, ip = entry.does_body, 1
+        end
+    else
+        if not tail then RSTACK[#RSTACK + 1] = { body, ip } end
+        body, ip = entry.body, 1
+    end
+end
+
 local function run()
     while true do
         local insn = body[ip]
@@ -150,31 +165,9 @@ local function run()
             if op == OP_LIT then
                 push(insn.value)
             elseif op == OP_CALL then
-                local entry = VOCAB[insn.target]
-                if entry.kind == "prim" then
-                    entry.fn()
-                elseif entry.kind == "create" then
-                    push(entry.address)
-                    if entry.does_body then
-                        RSTACK[#RSTACK + 1] = { body, ip }
-                        body, ip = entry.does_body, 1
-                    end
-                else
-                    RSTACK[#RSTACK + 1] = { body, ip }
-                    body, ip = entry.body, 1
-                end
+                dispatch_entry(VOCAB[insn.target], false)
             elseif op == OP_TCALL then
-                local entry = VOCAB[insn.target]
-                if entry.kind == "prim" then
-                    entry.fn()
-                elseif entry.kind == "create" then
-                    push(entry.address)
-                    if entry.does_body then
-                        body, ip = entry.does_body, 1
-                    end
-                else
-                    body, ip = entry.body, 1
-                end
+                dispatch_entry(VOCAB[insn.target], true)
             elseif op == OP_EXEC then
                 local q = table.remove(PSTACK)
                 check_quotation("execute", q)
@@ -845,16 +838,8 @@ process_token = function(token)
     local idx, entry = find_word(token)
 
     if entry and entry.immediate then
-        if entry.kind == "prim" then
-            entry.fn()
-        elseif entry.kind == "create" then
-            push(entry.address)
-            if entry.does_body then
-                run_body(entry.does_body)
-            end
-        else
-            run_body(entry.body)
-        end
+        dispatch_entry(entry, true)
+        if body then run() end
         return
     end
 
@@ -871,16 +856,8 @@ process_token = function(token)
         end
     else
         if entry then
-            if entry.kind == "prim" then
-                entry.fn()
-            elseif entry.kind == "create" then
-                push(entry.address)
-                if entry.does_body then
-                    run_body(entry.does_body)
-                end
-            else
-                run_body(entry.body)
-            end
+            dispatch_entry(entry, true)
+            if body then run() end
         else
             local n = tonumber(token)
             if n then
